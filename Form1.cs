@@ -10,9 +10,16 @@ using System.Windows.Forms;
 
 namespace Checkers
 {
+    
     public partial class Form1 : Form
     {
-        Button[,] szachownica = new Button[8, 8];
+        BoardButton[,] szachownica = new BoardButton[8, 8];
+        ChosenFigure? chosenFigure;
+        int whichTurn = 1;
+        int greyPoints = 0;
+        int redPoints = 0;
+
+        
         static int buttonSize = 50;
 
         Image redFigure = new Bitmap(new Bitmap("C:\\Users\\megak\\source\\repos\\Checkers\\Checkers\\Assets\\red.png"), new Size(buttonSize-15, buttonSize-15));
@@ -20,44 +27,47 @@ namespace Checkers
 
         public Form1()
         {
+            chosenFigure = null;
             InitializeComponent();
             InitializeBoard(szachownica);
             NewGame(szachownica);
-
-            
-            
+            EnableButtons();
         }
-        private void InitializeBoard(Button [,] szachownica)
+
+        private void InitializeBoard(BoardButton [,] szachownica)
         {
             
             for (int row = 0; row < 8; row++)
             {
                 for (int column = 0; column < 8; column++)
                 {
-                    szachownica[column, row] = new Button();
-                    szachownica[column, row].Location = new Point(buttonSize * row, buttonSize * column);
+                    szachownica[column, row] = new BoardButton();
+                    szachownica[column, row].Location = new Point(buttonSize * column, buttonSize * row);
                     szachownica[column, row].Size = new Size(buttonSize, buttonSize);
                     if (row % 2 == 0 && column % 2 == 0) szachownica[column, row].BackColor = Color.White;
                     else if (row % 2 != 0 && column % 2 == 0) szachownica[column, row].BackColor = Color.Black;
                     else if (row % 2 != 0 && column % 2 != 0) szachownica[column, row].BackColor = Color.White;
                     else if (row % 2 == 0 && column % 2 != 0) szachownica[column, row].BackColor = Color.Black;
 
+                    szachownica[column, row].Column = column;
+                    szachownica[column, row].Row = row;
                     this.Controls.Add(szachownica[column, row]);
-                    szachownica[column,row].Click += new System.EventHandler(this.Move);
+                    szachownica[column, row].Click += new System.EventHandler(this.Move);
+                    
                 }
             }
         }
         
 
 
-        private void NewGame(Button [,] szachownica)
+        private void NewGame(BoardButton [,] szachownica)
         {
             for (int row = 0; row < 3; row++)
             {
                 for (int column = 0; column < 8; column++)
                 {
-                    if (row % 2 == 0 && column % 2 != 0) szachownica[row, column].Image = redFigure;
-                    else if (row % 2 != 0 && column % 2 == 0) szachownica[row, column].Image = redFigure;
+                    if (row % 2 == 0 && column % 2 != 0) szachownica[column, row].Image = redFigure;
+                    else if (row % 2 != 0 && column % 2 == 0) szachownica[column, row].Image = redFigure;
                 }
             }
 
@@ -65,17 +75,182 @@ namespace Checkers
             {
                 for (int column = 0; column < 8; column++)
                 {
-                    if (row % 2 == 0 && column % 2 != 0) szachownica[row, column].Image = greyFigure;
-                    else if (row % 2 != 0 && column % 2 == 0) szachownica[row, column].Image = greyFigure;
+                    if (row % 2 == 0 && column % 2 != 0) szachownica[column, row].Image = greyFigure;
+                    else if (row % 2 != 0 && column % 2 == 0) szachownica[column, row].Image = greyFigure;
                 }
             }
+            
         }
 
         void Move(object sender, EventArgs e)
         {
-            Button currentButton = (Button)sender;
-            currentButton.Enabled = true;
+            BoardButton currentButton = (BoardButton)sender;
+            
+            if (currentButton.Image != null && currentButton.IsEnabled == true)
+            {
+                chosenFigure = new ChosenFigure(currentButton.Column, currentButton.Row, currentButton.Image);
+                PosibblePossitions(chosenFigure);
+            }
+            
+            if(currentButton.Image == null && chosenFigure !=null && chosenFigure.IsChosen == true && currentButton.BackColor == Color.Black && currentButton.IsEnabled == true)
+            {
+                currentButton.Image = chosenFigure.Figure;
+
+                int ecuation = currentButton.Column - chosenFigure.Column;
+
+                if (ecuation > 1) ExecuteFigure(szachownica[chosenFigure.Column + 1, chosenFigure.Row + whichTurn]);
+                else if (ecuation < -1) ExecuteFigure(szachownica[chosenFigure.Column - 1, chosenFigure.Row + whichTurn]);
+                RemoveFromOldPosition(chosenFigure);
+            }
         }
 
+        void RemoveFromOldPosition(ChosenFigure chosenFigure)
+        {
+            int column = chosenFigure.Column;
+            int row = chosenFigure.Row;
+            szachownica[column, row].Image = null;
+            chosenFigure.IsChosen = false;
+            ResetPossiblePositions();
+            NextTurn();
+
+        }
+
+        enum Team
+        {
+            Red, Grey
+        }
+
+        void PosibblePossitions(ChosenFigure chosenFigure)
+        {
+            ResetPossiblePositions();
+            if(chosenFigure.IsChosen == true)
+            {
+                try{
+                    if (szachownica[chosenFigure.Column + whichTurn, chosenFigure.Row + whichTurn].Image == null)
+                    {
+                        szachownica[chosenFigure.Column + whichTurn, chosenFigure.Row + whichTurn].FlatStyle = FlatStyle.Flat;
+                        szachownica[chosenFigure.Column + whichTurn, chosenFigure.Row + whichTurn].FlatAppearance.BorderSize = 5;
+                        szachownica[chosenFigure.Column + whichTurn, chosenFigure.Row + whichTurn].FlatAppearance.BorderColor = Color.Green;
+                        szachownica[chosenFigure.Column + whichTurn, chosenFigure.Row + whichTurn].IsEnabled = true;
+                    }
+                    else if(szachownica[chosenFigure.Column + whichTurn, chosenFigure.Row + whichTurn].Image != chosenFigure.Figure)
+                    {
+                        if (szachownica[chosenFigure.Column + 2* whichTurn, chosenFigure.Row + 2* whichTurn].Image == null)
+                        {
+                            szachownica[chosenFigure.Column + 2* whichTurn, chosenFigure.Row + 2* whichTurn].FlatStyle = FlatStyle.Flat;
+                            szachownica[chosenFigure.Column + 2* whichTurn, chosenFigure.Row + 2* whichTurn].FlatAppearance.BorderSize = 5;
+                            szachownica[chosenFigure.Column + 2* whichTurn, chosenFigure.Row + 2* whichTurn].FlatAppearance.BorderColor = Color.Green;
+                            szachownica[chosenFigure.Column + 2 * whichTurn, chosenFigure.Row + 2 * whichTurn].IsEnabled = true;
+                        }
+                    }
+                }
+                catch { }
+                try{
+                    if (szachownica[chosenFigure.Column - whichTurn, chosenFigure.Row + whichTurn].Image == null)
+                    {
+                        szachownica[chosenFigure.Column - whichTurn, chosenFigure.Row + whichTurn].FlatStyle = FlatStyle.Flat;
+                        szachownica[chosenFigure.Column - whichTurn, chosenFigure.Row + whichTurn].FlatAppearance.BorderSize = 5;
+                        szachownica[chosenFigure.Column - whichTurn, chosenFigure.Row + whichTurn].FlatAppearance.BorderColor = Color.Green;
+                        szachownica[chosenFigure.Column - whichTurn, chosenFigure.Row + whichTurn].IsEnabled = true;
+                    }
+                    else if (szachownica[chosenFigure.Column - whichTurn, chosenFigure.Row + whichTurn].Image != chosenFigure.Figure)
+                    {
+                        if(szachownica[chosenFigure.Column - 2* whichTurn, chosenFigure.Row + 2* whichTurn].Image == null)
+                        {
+                            szachownica[chosenFigure.Column - 2* whichTurn, chosenFigure.Row + 2* whichTurn].FlatStyle = FlatStyle.Flat;
+                            szachownica[chosenFigure.Column - 2* whichTurn, chosenFigure.Row + 2* whichTurn].FlatAppearance.BorderSize = 5;
+                            szachownica[chosenFigure.Column - 2* whichTurn, chosenFigure.Row + 2* whichTurn].FlatAppearance.BorderColor = Color.Green;
+                            szachownica[chosenFigure.Column - 2 * whichTurn, chosenFigure.Row + 2 * whichTurn].IsEnabled = true;
+                        }
+                    }
+                }
+                catch { }
+            }
+            else
+            {
+                ResetPossiblePositions();
+            }
+            
+        }
+
+        void ResetPossiblePositions()
+        {
+            foreach(BoardButton position in szachownica)
+            {
+                position.FlatStyle = FlatStyle.Standard;
+            }
+        }
+
+        private void NextTurn()
+        {
+            if (whichTurn == 1) whichTurn = -1;
+            else if (whichTurn == -1) whichTurn = 1;
+            EnableButtons();
+        }
+
+
+        public void EnableButtons()
+        {
+            if(whichTurn == 1)
+            {
+                foreach (BoardButton button in szachownica)
+                {
+                    if (button.Image == redFigure) button.IsEnabled = true;
+                    else button.IsEnabled = false;
+                }
+            }
+            else if (whichTurn == -1)
+            {
+                foreach (BoardButton button in szachownica)
+                {
+                    if (button.Image == greyFigure) button.IsEnabled = true;
+                    else button.IsEnabled = false;
+                }
+            }
+
+        }
+
+        public void ExecuteFigure(BoardButton figureToExecute)
+        {
+            figureToExecute.Image = null;
+            if (whichTurn == 1) redPoints += 1;
+            else if (whichTurn == -1) greyPoints += 1;
+        }
+
+
     }
+    
+    public class BoardButton : Button
+    {
+        public bool IsChosen { get; set; }
+        public int Column { get; set; }
+        public int Row { get; set; }
+        public bool IsEnabled { get; set; }
+
+
+    }
+
+    class ChosenFigure ///: IDisposable
+    {
+        public int Column { get; set; }
+        public int Row { get; set; }
+        public Image Figure { get; set; }
+
+        public bool IsChosen { get; set; }
+
+        public ChosenFigure(int column, int row , Image figure)
+        {
+            Column = column;
+            Row = row;
+            Figure = figure;
+            IsChosen = true;
+        }
+
+
+        ///public IDisposable Dispose()
+        ///{
+        ///    return ;
+        ///}
+    }
+
 }
