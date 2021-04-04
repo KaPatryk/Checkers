@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace Checkers
 {
@@ -19,9 +20,11 @@ namespace Checkers
         Team currentTeam;
         int teamIndicator = -1;
 
+        
+
         static int buttonSize = 50;
-        static Image redFigure = new Bitmap(new Bitmap("C:\\Users\\megak\\source\\repos\\Checkers\\Checkers\\Assets\\red.png"), new Size(buttonSize - 15, buttonSize - 15));
-        static Image greyFigure = new Bitmap(new Bitmap("C:\\Users\\megak\\source\\repos\\Checkers\\Checkers\\Assets\\grey.png"), new Size(buttonSize - 15, buttonSize - 15));
+        static Image redFigure = new Bitmap(new Bitmap(Path.Combine(Application.ExecutablePath, @"..\Assets\red.png")), new Size(buttonSize - 15, buttonSize - 15));
+        static Image greyFigure = new Bitmap(new Bitmap(Path.Combine(Application.ExecutablePath, @"..\Assets\grey.png")), new Size(buttonSize - 15, buttonSize - 15));
 
         BoardButton chosenButton = new BoardButton();
 
@@ -37,6 +40,7 @@ namespace Checkers
             currentTeam = greyTeam;
 
             InitializeComponent();
+            NewGame();
         }
 
         public void MoveFigure(object sender, EventArgs e)
@@ -46,11 +50,17 @@ namespace Checkers
             if (chosenButton.IsChosen && currentButton.IsEnabled && currentButton.Image == null)
             {
                 board.MakeMove(chosenButton, currentButton, currentTeam);
-
-                if (!IsSomeoneElseToExecute(currentButton, currentTeam))
+                if (!board.PossibleFights(currentButton, currentTeam))
+                {
+                    UpdatePoints();
                     NextTurn();
+                }
+                else
+                {
+                    chosenButton = currentButton;
+                }
             }
-            else if (currentButton.Image == currentTeam.figureImage)
+            else if (currentButton.Image == currentTeam.figureImage && currentButton.IsEnabled)
             {
                 board.DisableAllButtons();
                 board.EnableAllTeamButtons(currentTeam);
@@ -59,6 +69,7 @@ namespace Checkers
                 board.UnmarkAllButtons();
                 board.PickUpButton(currentButton, currentTeam);
                 board.PossibleMoves(currentButton, currentTeam);
+                board.PossibleFights(currentButton, currentTeam);
             }
         }
 
@@ -71,48 +82,56 @@ namespace Checkers
 
         public void NextTurn()
         {
+            IsGameOver();
+
             ChangeCurrentTeam();
+            
             board.DisableAllButtons();
             board.UnmarkAllButtons();
             board.EnableAllTeamButtons(currentTeam);
+            UpdateCurrentPlayerIcon();
+            
+
         }
 
         public void NewGame()
         {
-
+            UpdatePoints();
+            board.DisableAllButtons();
+            board.UnmarkAllButtons();
+            board.EnableAllTeamButtons(currentTeam);
+            UpdateCurrentPlayerIcon();
         }
 
         public void UpdatePoints()
         {
-
+            greyPointsLabel.Text = $"GreyTeam has {greyTeam.Points} points";
+            redPointsLabel.Text = $"RedTeam has {redTeam.Points} points";
         }
 
         public void UpdateCurrentPlayerIcon()
         {
-
+            turnIndicatorLabel.Text = $"{currentTeam.Name}Team's turn";
         }
 
-        public bool GameOver()
+        public bool IsGameOver()
         {
-            return false;
-        }
-
-        public bool IsSomeoneElseToExecute(BoardButton newPosition, Team currentTeam)
-        {
-            board.PossibleMoves(newPosition, currentTeam);
-
-            if (board.markedFiguresToExecuteList == null)
+            int teamFiguresQty = 0;
+            foreach(BoardButton button in board.checkerboard)
             {
-                return false;
+                if(button.Image == currentTeam.figureImage)
+                {
+                    teamFiguresQty++;
+                }
             }
-            else
+            if (teamFiguresQty == 0)
             {
-                board.EnableButton(newPosition);
+                MessageBox.Show($"{currentTeam.Name}Team is the winner!");
                 return true;
             }
-
+            else
+                return false;
         }
-
 
     }
 

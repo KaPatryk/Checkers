@@ -39,17 +39,17 @@ namespace Checkers
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label1.Location = new System.Drawing.Point(548, 9);
+            this.label1.Location = new System.Drawing.Point(455, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(81, 25);
+            this.label1.Size = new System.Drawing.Size(86, 25);
             this.label1.TabIndex = 0;
-            this.label1.Text = "POINTS";
+            this.label1.Text = "POINTS:";
             // 
             // greyPointsLabel
             // 
             this.greyPointsLabel.AutoSize = true;
             this.greyPointsLabel.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.greyPointsLabel.Location = new System.Drawing.Point(550, 34);
+            this.greyPointsLabel.Location = new System.Drawing.Point(457, 34);
             this.greyPointsLabel.Name = "greyPointsLabel";
             this.greyPointsLabel.Size = new System.Drawing.Size(60, 19);
             this.greyPointsLabel.TabIndex = 1;
@@ -59,7 +59,7 @@ namespace Checkers
             // 
             this.redPointsLabel.AutoSize = true;
             this.redPointsLabel.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.redPointsLabel.Location = new System.Drawing.Point(550, 59);
+            this.redPointsLabel.Location = new System.Drawing.Point(457, 59);
             this.redPointsLabel.Name = "redPointsLabel";
             this.redPointsLabel.Size = new System.Drawing.Size(60, 19);
             this.redPointsLabel.TabIndex = 2;
@@ -71,21 +71,23 @@ namespace Checkers
             this.turnIndicatorLabel.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.turnIndicatorLabel.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.turnIndicatorLabel.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.turnIndicatorLabel.Location = new System.Drawing.Point(550, 108);
+            this.turnIndicatorLabel.Location = new System.Drawing.Point(457, 98);
             this.turnIndicatorLabel.Name = "turnIndicatorLabel";
-            this.turnIndicatorLabel.Size = new System.Drawing.Size(63, 25);
+            this.turnIndicatorLabel.Size = new System.Drawing.Size(167, 25);
             this.turnIndicatorLabel.TabIndex = 3;
-            this.turnIndicatorLabel.Text = "label2";
+            this.turnIndicatorLabel.Text = "turnIndicatorLabel";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(794, 559);
+            this.ClientSize = new System.Drawing.Size(684, 559);
             this.Controls.Add(this.turnIndicatorLabel);
             this.Controls.Add(this.redPointsLabel);
             this.Controls.Add(this.greyPointsLabel);
             this.Controls.Add(this.label1);
+            this.MaximumSize = new System.Drawing.Size(810, 598);
+            this.MinimumSize = new System.Drawing.Size(700, 598);
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);

@@ -1,0 +1,5 @@
+C:\Users\megak\Desktop\Checkers\Checkers.exe
+C:\Users\megak\Desktop\Checkers\Checkers.dll
+C:\Users\megak\Desktop\Checkers\Checkers.deps.json
+C:\Users\megak\Desktop\Checkers\Checkers.runtimeconfig.json
+C:\Users\megak\Desktop\Checkers\Checkers.pdb

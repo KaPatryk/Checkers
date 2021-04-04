@@ -15,12 +15,19 @@ namespace Checkers
         public string Name { get; private set; }
         public Image figureImage { get; set; }
         public string StartingPosition { get; set; }
+        public int Points { get; set; }
 
         public Team(string name, Image figureImage, string startingPosition)
         {
             Name = name;
             this.figureImage = figureImage;
             StartingPosition = startingPosition;
+            Points = 0;
+        }
+
+        public void AddPoint()
+        {
+            Points += 1;
         }
 
         public int GetStartingPosition()

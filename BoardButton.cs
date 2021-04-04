@@ -16,5 +16,6 @@ namespace Checkers
         public int Column { get; set; }
         public int Row { get; set; }
         public bool IsEnabled { get; set; }
+        public bool IsQueen { get; set; }
     }
 }
