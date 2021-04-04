@@ -141,8 +141,7 @@ namespace Checkers
         {
             int teamIndicator = TeamIndicatorChecker(currentTeam);
 
-
-            if (boardButton.IsChosen)
+            if (boardButton.IsChosen && !boardButton.IsQueen)
             {
                 for (int row = (boardButton.Row - 1); row <= (boardButton.Row + 1); row++)
                 {
@@ -157,14 +156,6 @@ namespace Checkers
                                     EnableButton(checkerboard[column, row]);
                                     MarkButton(checkerboard[column, row]);
                                 }
-                               /* else if (isFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && isFieldEmpty(checkerboard[column + (column - boardButton.Column), row + (row - boardButton.Row)]))
-                                {
-                                    EnableButton(checkerboard[column + (column - boardButton.Column), row + (row - boardButton.Row)]);
-                                    MarkButton(checkerboard[column + (column - boardButton.Column), row + (row - boardButton.Row)]);
-                                    markedPositionsList.Add(checkerboard[column + (column - boardButton.Column), row + (row - boardButton.Row)]);
-                                    markedFiguresToExecuteList.Add(checkerboard[column, row]);
-                                }*/
-
                             }
                             catch { }
 
@@ -173,8 +164,87 @@ namespace Checkers
                 }
             }
 
-        }
+            else if(boardButton.IsChosen && boardButton.IsQueen)
+            {
 
+                for (int column = boardButton.Column, row = boardButton.Row; column >= 0 && row >= 0; column--, row--)
+                {
+                    try
+                    {
+                        if (isFieldEmpty(checkerboard[column, row]))
+                        {
+                            EnableButton(checkerboard[column, row]);
+                            MarkButton(checkerboard[column, row]);
+                        }
+                        else if (isFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && isFieldEmpty(checkerboard[column - 1, row - 1]))
+                        {
+                            EnableButton(checkerboard[column - 1, row - 1]);
+                            MarkButton(checkerboard[column - 1, row - 1]);
+                            break;
+                        }
+                    }
+                    catch { }
+                    
+                }
+                for (int column = boardButton.Column, row = boardButton.Row; column >= 0 && row < 8; column--, row++)
+                {
+                    try
+                    {
+                        if (isFieldEmpty(checkerboard[column, row]))
+                        {
+                            EnableButton(checkerboard[column, row]);
+                            MarkButton(checkerboard[column, row]);
+                        }
+                        else if (isFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && isFieldEmpty(checkerboard[column - 1, row + 1]))
+                        {
+                            EnableButton(checkerboard[column - 1, row + 1]);
+                            MarkButton(checkerboard[column - 1, row + 1]);
+                            break;
+                        }
+                    }
+                    catch { }
+                    
+                }
+                for (int column = boardButton.Column, row = boardButton.Row; column < 8 && row < 8; column++, row++)
+                {
+                    try
+                    {
+                        if (isFieldEmpty(checkerboard[column, row]))
+                        {
+                            EnableButton(checkerboard[column, row]);
+                            MarkButton(checkerboard[column, row]);
+                        }
+                        else if (isFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && isFieldEmpty(checkerboard[column + 1, row + 1]))
+                        {
+                            EnableButton(checkerboard[column + 1, row + 1]);
+                            MarkButton(checkerboard[column + 1, row + 1]);
+                            break;
+                        }
+                    }
+                    catch { }
+                    
+                }
+                for(int column = boardButton.Column, row = boardButton.Row; column < 8 && row >= 0; column++, row--)
+                    {
+                    try
+                    {
+                        if (isFieldEmpty(checkerboard[column, row]))
+                        {
+                            EnableButton(checkerboard[column, row]);
+                            MarkButton(checkerboard[column, row]);
+                        }
+                        else if (isFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && isFieldEmpty(checkerboard[column + 1, row - 1]))
+                        {
+                            EnableButton(checkerboard[column + 1, row - 1]);
+                            MarkButton(checkerboard[column + 1, row - 1]);
+                            break;
+                        }
+                    }
+                    catch { }
+                }
+            }
+
+        }
 
 
         public bool isFieldEmpty(BoardButton boardButton)
@@ -242,11 +312,21 @@ namespace Checkers
             EnableAllTeamButtons(currentTeam);
         }
 
+        public void MakeTheQueen(BoardButton currentButton, Team currentTeam)
+        {
+            if(TeamIndicatorChecker(currentTeam)==1 && currentButton.Row == 7)
+                currentButton.IsQueen = true;
+            else if (TeamIndicatorChecker(currentTeam) == -1 && currentButton.Row == 0)
+                currentButton.IsQueen = true;
+        }
+
         public void MakeMove(BoardButton oldPosition, BoardButton newPosition, Team currentTeam)
         {
             if (newPosition.IsEnabled)
             {
                 newPosition.Image = currentTeam.figureImage;
+                newPosition.IsQueen = oldPosition.IsQueen;
+                MakeTheQueen(newPosition, currentTeam);
                 oldPosition.Image = null;
                 UnmarkAllButtons();
                 DisableAllButtons();
@@ -256,9 +336,6 @@ namespace Checkers
                     newPosition.IsEnabled = true;
                     newPosition.IsChosen = true;
                 }
-                    
-                
-
             }
         }
 
@@ -287,6 +364,8 @@ namespace Checkers
             markedFiguresToExecuteList.Clear();
         }
 
+
+
         public int TeamIndicatorChecker(Team currentTeam)
         {
             if (currentTeam.Name == "Red")
@@ -299,7 +378,15 @@ namespace Checkers
         {
             int teamIndicator = TeamIndicatorChecker(currentTeam);
             bool isSomeoneToExecute = false;
-            if (currentPosition.IsChosen)
+
+            PickUpButton(currentPosition, currentTeam);
+
+            if (currentPosition.IsChosen && currentPosition.IsQueen)
+            {
+
+            }
+
+            else if (currentPosition.IsChosen && !currentPosition.IsQueen)
             {
                 for (int row = (currentPosition.Row - 1); row <= (currentPosition.Row + 1); row++)
                 {

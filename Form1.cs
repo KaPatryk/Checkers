@@ -20,8 +20,6 @@ namespace Checkers
         Team currentTeam;
         int teamIndicator = -1;
 
-        
-
         static int buttonSize = 50;
         static Image redFigure = new Bitmap(new Bitmap(Path.Combine(Application.ExecutablePath, @"..\Assets\red.png")), new Size(buttonSize - 15, buttonSize - 15));
         static Image greyFigure = new Bitmap(new Bitmap(Path.Combine(Application.ExecutablePath, @"..\Assets\grey.png")), new Size(buttonSize - 15, buttonSize - 15));
@@ -29,10 +27,8 @@ namespace Checkers
         BoardButton chosenButton = new BoardButton();
 
 
-
         public Form1()
         {
-
             redTeam = new Team("Red", redFigure, "Up");
             greyTeam = new Team("Grey", greyFigure, "Down");
             board = new Board(this, greyTeam, redTeam);
@@ -50,15 +46,22 @@ namespace Checkers
             if (chosenButton.IsChosen && currentButton.IsEnabled && currentButton.Image == null)
             {
                 board.MakeMove(chosenButton, currentButton, currentTeam);
-                if (!board.PossibleFights(currentButton, currentTeam))
+                UpdatePoints();
+
+                if((chosenButton.Row == (currentButton.Row-1)) || (chosenButton.Row == (currentButton.Row + 1)))
                 {
-                    UpdatePoints();
+                    NextTurn();
+                }
+
+                else if (!board.PossibleFights(currentButton, currentTeam))
+                {
                     NextTurn();
                 }
                 else
                 {
                     chosenButton = currentButton;
                 }
+                
             }
             else if (currentButton.Image == currentTeam.figureImage && currentButton.IsEnabled)
             {
@@ -68,8 +71,9 @@ namespace Checkers
                 chosenButton = currentButton;
                 board.UnmarkAllButtons();
                 board.PickUpButton(currentButton, currentTeam);
-                board.PossibleMoves(currentButton, currentTeam);
-                board.PossibleFights(currentButton, currentTeam);
+                if(!board.PossibleFights(currentButton, currentTeam))
+                    board.PossibleMoves(currentButton, currentTeam);
+                
             }
         }
 
@@ -90,8 +94,6 @@ namespace Checkers
             board.UnmarkAllButtons();
             board.EnableAllTeamButtons(currentTeam);
             UpdateCurrentPlayerIcon();
-            
-
         }
 
         public void NewGame()

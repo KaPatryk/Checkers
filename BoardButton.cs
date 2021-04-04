@@ -17,5 +17,12 @@ namespace Checkers
         public int Row { get; set; }
         public bool IsEnabled { get; set; }
         public bool IsQueen { get; set; }
+
+        public BoardButton()
+        {
+            IsQueen = false;
+        }
     }
+
+    
 }
