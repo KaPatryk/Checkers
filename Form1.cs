@@ -67,6 +67,7 @@ namespace Checkers
             {
                 board.DisableAllButtons();
                 board.EnableAllTeamButtons(currentTeam);
+                board.ClearMarkingLists();
                 board.ResetIsChosenButtons();
                 chosenButton = currentButton;
                 board.UnmarkAllButtons();
@@ -86,14 +87,13 @@ namespace Checkers
 
         public void NextTurn()
         {
-            IsGameOver();
-
             ChangeCurrentTeam();
             
             board.DisableAllButtons();
             board.UnmarkAllButtons();
             board.EnableAllTeamButtons(currentTeam);
             UpdateCurrentPlayerIcon();
+            IsGameOver();
         }
 
         public void NewGame()
@@ -128,7 +128,7 @@ namespace Checkers
             }
             if (teamFiguresQty == 0)
             {
-                MessageBox.Show($"{currentTeam.Name}Team is the winner!");
+                MessageBox.Show($"{currentTeam.Name}Team is the looser!");
                 return true;
             }
             else

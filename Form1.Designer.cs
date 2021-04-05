@@ -89,7 +89,7 @@ namespace Checkers
             this.MaximumSize = new System.Drawing.Size(700, 450);
             this.MinimumSize = new System.Drawing.Size(700, 450);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Checkers";
             this.ResumeLayout(false);
             this.PerformLayout();
 
