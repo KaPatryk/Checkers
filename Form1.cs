@@ -73,7 +73,7 @@ namespace Checkers
                 board.UnmarkAllButtons();
                 board.PickUpButton(currentButton, currentTeam);
                 if(!board.PossibleFights(currentButton, currentTeam))
-                    board.PossibleMoves(currentButton, currentTeam);
+                    board.ValidMoves(currentButton, currentTeam);
                 
             }
         }
@@ -119,7 +119,7 @@ namespace Checkers
         public bool IsGameOver()
         {
             int teamFiguresQty = 0;
-            foreach(BoardButton button in board.checkerboard)
+            foreach(BoardButton button in board.GetCheckerboard())
             {
                 if(button.Image == currentTeam.figureImage)
                 {

@@ -12,16 +12,26 @@ namespace Checkers
 {
     public class Board
     {
-        public int Columns { get; set; }
-        public int Rows { get; set; }
-        public int ButtonSize { get; set; }
-        public int Column { get; set; }
-        public int Row { get; set; }
+        public int Columns { get; private set; }
+        public int Rows { get; private set; }
+        public int ButtonSize { get; private set; }
 
-        public BoardButton[,] checkerboard;
-        public List<BoardButton> markedPositionsList = new List<BoardButton>();
-        public List<BoardButton> markedFiguresToExecuteList = new List<BoardButton>();
+        private BoardButton[,] checkerboard;
+        private List<BoardButton> markedPositionsList = new List<BoardButton>();
+        private List<BoardButton> markedFiguresToExecuteList = new List<BoardButton>();
 
+
+        public Board(Form1 form, int boardSize, int buttonSize, Team firstTeam, Team secondTeam)
+        {
+            ButtonSize = buttonSize;
+            Columns = boardSize;
+            Rows = boardSize;
+            checkerboard = new BoardButton[Columns, Rows];
+
+            BuildBoard(Columns, Rows, ButtonSize, form);
+            ResetPlayerPositions(checkerboard, firstTeam);
+            ResetPlayerPositions(checkerboard, secondTeam);
+        }
 
         public Board(Form1 form, Team firstTeam, Team secondTeam)
         {
@@ -33,6 +43,11 @@ namespace Checkers
             BuildBoard(Columns, Rows, ButtonSize, form);
             ResetPlayerPositions(checkerboard, firstTeam);
             ResetPlayerPositions(checkerboard, secondTeam);
+        }
+
+        public BoardButton[,] GetCheckerboard()
+        {
+            return checkerboard;
         }
 
         enum StartingPosition
@@ -57,12 +72,12 @@ namespace Checkers
             }
         }
 
-        public void AddButtonClickTo_EventHandler(BoardButton boardButton, Form1 form)
+        private void AddButtonClickTo_EventHandler(BoardButton boardButton, Form1 form)
         {
             boardButton.Click += new System.EventHandler(form.MoveFigure);
         }
 
-        public BoardButton CreateNewButton(int buttonSize)
+        private BoardButton CreateNewButton(int buttonSize)
         {
             BoardButton boardButton = new BoardButton();
             boardButton.Size = new Size(buttonSize, buttonSize);
@@ -70,16 +85,15 @@ namespace Checkers
             return boardButton;
         }
 
-        public void PlaceButton(BoardButton boardButton, int column, int row)
+        private void PlaceButton(BoardButton boardButton, int column, int row)
         {
 
             boardButton.Location = new Point(boardButton.Size.Width * column, boardButton.Size.Height * row);
-            boardButton.Column = column;
-            boardButton.Row = row;
+            boardButton.SetPosition(column, row);
 
         }
 
-        public void SetButtonBackColor(BoardButton boardButton, int column, int row)
+        private void SetButtonBackColor(BoardButton boardButton, int column, int row)
         {
             if (row % 2 == 0 && column % 2 == 0) boardButton.BackColor = Color.White;
             else if (row % 2 != 0 && column % 2 == 0) boardButton.BackColor = Color.Black;
@@ -117,7 +131,6 @@ namespace Checkers
                             else if (row % 2 != 0 && column % 2 == 0) checkerboard[column, row].Image = team.figureImage;
                         }
                     }
-
                     break;
             }
         }
@@ -137,7 +150,7 @@ namespace Checkers
                 button.IsChosen = false;
         }
 
-        public void PossibleMoves(BoardButton boardButton, Team currentTeam)
+        public void ValidMoves(BoardButton boardButton, Team currentTeam)
         {
             int teamIndicator = TeamIndicatorChecker(currentTeam);
 
@@ -151,7 +164,7 @@ namespace Checkers
                         {
                             try
                             {
-                                if (isFieldEmpty(checkerboard[column, row]) && (boardButton.Row - row) == -teamIndicator)
+                                if (IsFieldEmpty(checkerboard[column, row]) && (boardButton.Row - row) == -teamIndicator)
                                 {
                                     EnableButton(checkerboard[column, row]);
                                     MarkButton(checkerboard[column, row]);
@@ -171,32 +184,21 @@ namespace Checkers
                 {
                     try
                     {
-                        if (isFieldEmpty(checkerboard[column, row]))
+                        if (IsFieldEmpty(checkerboard[column, row]))
                         {
                             EnableButton(checkerboard[column, row]);
                             MarkButton(checkerboard[column, row]);
                         }
-                        else if (!isFieldEmpty(checkerboard[column, row]) && !isFieldEmpty(checkerboard[column - 1, row - 1]))
+                        else if (!IsFieldEmpty(checkerboard[column, row]) && !IsFieldEmpty(checkerboard[column - 1, row - 1]))
                             break;
-                        else if (!isFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && !isFieldEmpty(checkerboard[column - 1, row - 1]))
+                        else if (!IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && !IsFieldEmpty(checkerboard[column - 1, row - 1]))
                         {
                             break;
                         }
-                        else if (!isFieldOccupiedByOpponent(checkerboard[column, row], currentTeam))
+                        else if (!IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam))
                         {
                             break;
                         }
-
-                        /*
-                        else if (isFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && isFieldEmpty(checkerboard[column - 1, row - 1]))
-                        {
-                            EnableButton(checkerboard[column - 1, row - 1]);
-                            MarkButton(checkerboard[column - 1, row - 1]);
-
-                            break;
-                        }
-                        
-                        */
                     }
                     catch { }
                     
@@ -205,32 +207,23 @@ namespace Checkers
                 {
                     try
                     {
-                        if (isFieldEmpty(checkerboard[column, row]))
+                        if (IsFieldEmpty(checkerboard[column, row]))
                         {
                             EnableButton(checkerboard[column, row]);
                             MarkButton(checkerboard[column, row]);
                         }
-                        else if (!isFieldEmpty(checkerboard[column, row]) && !isFieldEmpty(checkerboard[column - 1, row + 1]))
+                        else if (!IsFieldEmpty(checkerboard[column, row]) && !IsFieldEmpty(checkerboard[column - 1, row + 1]))
                         {
                             break; 
                         }
-                        else if (!isFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && !isFieldEmpty(checkerboard[column - 1, row + 1]))
+                        else if (!IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && !IsFieldEmpty(checkerboard[column - 1, row + 1]))
                         {
                             break;
                         }
-                        else if (!isFieldOccupiedByOpponent(checkerboard[column, row], currentTeam))
+                        else if (!IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam))
                         {
                             break;
                         }
-                        /*
-                        else if (isFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && isFieldEmpty(checkerboard[column - 1, row + 1]))
-                        {
-                            EnableButton(checkerboard[column - 1, row + 1]);
-                            MarkButton(checkerboard[column - 1, row + 1]);
-                            break;
-                        }
-                        
-                        */
                     }
                     catch { }
                     
@@ -239,29 +232,20 @@ namespace Checkers
                 {
                     try
                     {
-                        if (isFieldEmpty(checkerboard[column, row]))
+                        if (IsFieldEmpty(checkerboard[column, row]))
                         {
                             EnableButton(checkerboard[column, row]);
                             MarkButton(checkerboard[column, row]);
                         }
-                        else if (!isFieldEmpty(checkerboard[column, row]) && !isFieldEmpty(checkerboard[column + 1, row + 1])) break;
-                        else if (!isFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && !isFieldEmpty(checkerboard[column + 1, row + 1]))
+                        else if (!IsFieldEmpty(checkerboard[column, row]) && !IsFieldEmpty(checkerboard[column + 1, row + 1])) break;
+                        else if (!IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && !IsFieldEmpty(checkerboard[column + 1, row + 1]))
                         {
                             break;
                         }
-                        else if (!isFieldOccupiedByOpponent(checkerboard[column, row], currentTeam))
+                        else if (!IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam))
                         {
                             break;
                         }
-                        /*
-                        else if (isFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && isFieldEmpty(checkerboard[column + 1, row + 1]))
-                        {
-                            EnableButton(checkerboard[column + 1, row + 1]);
-                            MarkButton(checkerboard[column + 1, row + 1]);
-                            break;
-                        }
-                        
-                        */
                     }
                     catch { }
                     
@@ -270,29 +254,20 @@ namespace Checkers
                     {
                     try
                     {
-                        if (isFieldEmpty(checkerboard[column, row]))
+                        if (IsFieldEmpty(checkerboard[column, row]))
                         {
                             EnableButton(checkerboard[column, row]);
                             MarkButton(checkerboard[column, row]);
                         }
-                        else if (!isFieldEmpty(checkerboard[column, row]) && !isFieldEmpty(checkerboard[column + 1, row - 1])) break;
-                        else if (!isFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && !isFieldEmpty(checkerboard[column + 1, row - 1]))
+                        else if (!IsFieldEmpty(checkerboard[column, row]) && !IsFieldEmpty(checkerboard[column + 1, row - 1])) break;
+                        else if (!IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && !IsFieldEmpty(checkerboard[column + 1, row - 1]))
                         {
                             break;
                         }
-                        else if (!isFieldOccupiedByOpponent(checkerboard[column, row], currentTeam))
+                        else if (!IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam))
                         {
                             break;
                         }
-                        /*
-                        else if (isFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && isFieldEmpty(checkerboard[column + 1, row - 1]))
-                        {
-                            EnableButton(checkerboard[column + 1, row - 1]);
-                            MarkButton(checkerboard[column + 1, row - 1]);
-                            break;
-                        }
-                        
-                        */
                     }
                     catch { }
                 }
@@ -301,7 +276,7 @@ namespace Checkers
         }
 
 
-        public bool isFieldEmpty(BoardButton boardButton)
+        public bool IsFieldEmpty(BoardButton boardButton)
         {
             if (boardButton.Image == null && boardButton.BackColor != Color.White)
                 return true;
@@ -309,9 +284,9 @@ namespace Checkers
                 return false;
         }
 
-        public bool isFieldOccupiedByOpponent(BoardButton boardButton, Team currentTeam)
+        public bool IsFieldOccupiedByOpponent(BoardButton boardButton, Team currentTeam)
         {
-            if (!isFieldEmpty(boardButton) && boardButton.Image != currentTeam.figureImage)
+            if (!IsFieldEmpty(boardButton) && boardButton.Image != currentTeam.figureImage)
                 return true;
             else
                 return false;
@@ -335,11 +310,6 @@ namespace Checkers
         {
             foreach (BoardButton button in checkerboard)
                 button.IsEnabled = false;
-        }
-
-        public void DisableButton(BoardButton boardButton)
-        {
-            boardButton.IsEnabled = false;
         }
 
         public void MarkButton(BoardButton boardButton)
@@ -366,7 +336,7 @@ namespace Checkers
             EnableAllTeamButtons(currentTeam);
         }
 
-        public void MakeTheQueen(BoardButton currentButton, Team currentTeam)
+        private void MakeTheQueen(BoardButton currentButton, Team currentTeam)
         {
             if(TeamIndicatorChecker(currentTeam)==1 && currentButton.Row == 7)
                 currentButton.IsQueen = true;
@@ -442,7 +412,7 @@ namespace Checkers
                 {
                     try
                     {
-                        if (isFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && isFieldEmpty(checkerboard[column - 1, row - 1]))
+                        if (IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && IsFieldEmpty(checkerboard[column - 1, row - 1]))
                         {
                             EnableButton(checkerboard[column - 1, row - 1]);
                             MarkButton(checkerboard[column - 1, row - 1]);
@@ -452,7 +422,7 @@ namespace Checkers
 
                             break;
                         }
-                        else if (isFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && !isFieldEmpty(checkerboard[column - 1, row - 1]))
+                        else if (IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && !IsFieldEmpty(checkerboard[column - 1, row - 1]))
                         {
                             break;
                         }
@@ -464,7 +434,7 @@ namespace Checkers
                 {
                     try
                     {
-                        if (isFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && isFieldEmpty(checkerboard[column - 1, row + 1]))
+                        if (IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && IsFieldEmpty(checkerboard[column - 1, row + 1]))
                         {
                             EnableButton(checkerboard[column - 1, row + 1]);
                             MarkButton(checkerboard[column - 1, row + 1]);
@@ -474,7 +444,7 @@ namespace Checkers
 
                             break;
                         }
-                        else if (isFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && !isFieldEmpty(checkerboard[column - 1, row + 1]))
+                        else if (IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && !IsFieldEmpty(checkerboard[column - 1, row + 1]))
                         {
                             break;
                         }
@@ -486,7 +456,7 @@ namespace Checkers
                 {
                     try
                     {
-                        if (isFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && isFieldEmpty(checkerboard[column + 1, row + 1]))
+                        if (IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && IsFieldEmpty(checkerboard[column + 1, row + 1]))
                         {
                             EnableButton(checkerboard[column + 1, row + 1]);
                             MarkButton(checkerboard[column + 1, row + 1]);
@@ -495,7 +465,7 @@ namespace Checkers
                             isSomeoneToExecute = true;
                             break;
                         }
-                        else if (isFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && !isFieldEmpty(checkerboard[column + 1, row + 1]))
+                        else if (IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && !IsFieldEmpty(checkerboard[column + 1, row + 1]))
                         {
                             break;
                         }
@@ -507,7 +477,7 @@ namespace Checkers
                 {
                     try
                     {
-                        if (isFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && isFieldEmpty(checkerboard[column + 1, row - 1]))
+                        if (IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && IsFieldEmpty(checkerboard[column + 1, row - 1]))
                         {
                             EnableButton(checkerboard[column + 1, row - 1]);
                             MarkButton(checkerboard[column + 1, row - 1]);
@@ -516,7 +486,7 @@ namespace Checkers
                             isSomeoneToExecute = true;
                             break;
                         }
-                        else if (isFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && !isFieldEmpty(checkerboard[column + 1, row - 1]))
+                        else if (IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && !IsFieldEmpty(checkerboard[column + 1, row - 1]))
                         {
                             break;
                         }
@@ -535,7 +505,7 @@ namespace Checkers
                         {
                             try
                             {
-                                if (isFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && isFieldEmpty(checkerboard[column + (column - currentPosition.Column), row + (row - currentPosition.Row)]))
+                                if (IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && IsFieldEmpty(checkerboard[column + (column - currentPosition.Column), row + (row - currentPosition.Row)]))
                                 {
                                     EnableButton(checkerboard[column + (column - currentPosition.Column), row + (row - currentPosition.Row)]);
                                     MarkButton(checkerboard[column + (column - currentPosition.Column), row + (row - currentPosition.Row)]);
