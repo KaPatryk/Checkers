@@ -11,7 +11,7 @@ using System.IO;
 
 namespace Checkers
 {
-
+    
     public partial class Form1 : Form
     {
         Board board;
@@ -26,15 +26,8 @@ namespace Checkers
 
         BoardButton chosenButton = new BoardButton();
 
-
         public Form1()
         {
-            redTeam = new Team("Red", redFigure, "Up");
-            greyTeam = new Team("Grey", greyFigure, "Down");
-            board = new Board(this, greyTeam, redTeam);
-
-            currentTeam = greyTeam;
-
             InitializeComponent();
             NewGame();
         }
@@ -48,7 +41,7 @@ namespace Checkers
                 board.MakeMove(chosenButton, currentButton, currentTeam);
                 UpdatePoints();
 
-                if((chosenButton.Row == (currentButton.Row-1)) || (chosenButton.Row == (currentButton.Row + 1)))
+                if ((chosenButton.Row == (currentButton.Row - 1)) || (chosenButton.Row == (currentButton.Row + 1)))
                 {
                     NextTurn();
                 }
@@ -61,7 +54,7 @@ namespace Checkers
                 {
                     chosenButton = currentButton;
                 }
-                
+
             }
             else if (currentButton.Image == currentTeam.figureImage && currentButton.IsEnabled)
             {
@@ -72,9 +65,8 @@ namespace Checkers
                 chosenButton = currentButton;
                 board.UnmarkAllButtons();
                 board.PickUpButton(currentButton, currentTeam);
-                if(!board.PossibleFights(currentButton, currentTeam))
+                if (!board.PossibleFights(currentButton, currentTeam))
                     board.ValidMoves(currentButton, currentTeam);
-                
             }
         }
 
@@ -88,7 +80,7 @@ namespace Checkers
         public void NextTurn()
         {
             ChangeCurrentTeam();
-            
+
             board.DisableAllButtons();
             board.UnmarkAllButtons();
             board.EnableAllTeamButtons(currentTeam);
@@ -98,11 +90,27 @@ namespace Checkers
 
         public void NewGame()
         {
+            this.Controls.Clear();
+            
+            redTeam = new Team("Red", redFigure, "Up");
+            greyTeam = new Team("Grey", greyFigure, "Down");
+            board = new Board(this, greyTeam, redTeam);
+
+            currentTeam = greyTeam;
+
+            InitializeComponent();
+
+            ResetTeamIndicator();
             UpdatePoints();
             board.DisableAllButtons();
             board.UnmarkAllButtons();
             board.EnableAllTeamButtons(currentTeam);
             UpdateCurrentPlayerIcon();
+        }
+
+        private void ResetTeamIndicator()
+        {
+            teamIndicator = -1;
         }
 
         public void UpdatePoints()
@@ -119,9 +127,9 @@ namespace Checkers
         public bool IsGameOver()
         {
             int teamFiguresQty = 0;
-            foreach(BoardButton button in board.GetCheckerboard())
+            foreach (BoardButton button in board.GetCheckerboard())
             {
-                if(button.Image == currentTeam.figureImage)
+                if (button.Image == currentTeam.figureImage)
                 {
                     teamFiguresQty++;
                 }
@@ -135,7 +143,10 @@ namespace Checkers
                 return false;
         }
 
+        private void newGameButton_Click(object sender, EventArgs e)
+        {
+            board = null;
+            NewGame();
+        }
     }
-
-
 }

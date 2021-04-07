@@ -33,6 +33,7 @@ namespace Checkers
             this.greyPointsLabel = new System.Windows.Forms.Label();
             this.redPointsLabel = new System.Windows.Forms.Label();
             this.turnIndicatorLabel = new System.Windows.Forms.Label();
+            this.newGameButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -77,11 +78,22 @@ namespace Checkers
             this.turnIndicatorLabel.TabIndex = 3;
             this.turnIndicatorLabel.Text = "turnIndicatorLabel";
             // 
+            // newGameButton
+            // 
+            this.newGameButton.Location = new System.Drawing.Point(457, 138);
+            this.newGameButton.Name = "newGameButton";
+            this.newGameButton.Size = new System.Drawing.Size(75, 23);
+            this.newGameButton.TabIndex = 4;
+            this.newGameButton.Text = "New game";
+            this.newGameButton.UseVisualStyleBackColor = true;
+            this.newGameButton.Click += new System.EventHandler(this.newGameButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(684, 411);
+            this.Controls.Add(this.newGameButton);
             this.Controls.Add(this.turnIndicatorLabel);
             this.Controls.Add(this.redPointsLabel);
             this.Controls.Add(this.greyPointsLabel);
@@ -101,6 +113,7 @@ namespace Checkers
         private System.Windows.Forms.Label greyPointsLabel;
         private System.Windows.Forms.Label redPointsLabel;
         private System.Windows.Forms.Label turnIndicatorLabel;
+        private System.Windows.Forms.Button newGameButton;
     }
 }
 
