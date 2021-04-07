@@ -88,7 +88,7 @@ namespace Checkers
         private void PlaceButton(BoardButton boardButton, int column, int row)
         {
 
-            boardButton.Location = new Point(boardButton.Size.Width * column, boardButton.Size.Height * row);
+            boardButton.Location = new Point(boardButton.Size.Width * column, 35 + (boardButton.Size.Height * row));
             boardButton.SetPosition(column, row);
 
         }

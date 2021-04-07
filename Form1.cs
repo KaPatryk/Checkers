@@ -29,7 +29,9 @@ namespace Checkers
         public Form1()
         {
             InitializeComponent();
+            
             NewGame();
+            SetTeamPointsIndicator();
         }
 
         public void MoveFigure(object sender, EventArgs e)
@@ -116,7 +118,9 @@ namespace Checkers
         public void UpdatePoints()
         {
             greyPointsLabel.Text = $"GreyTeam has {greyTeam.Points} points";
+            greysTeamPointIndicator.Text = $"{greyTeam.Points}";
             redPointsLabel.Text = $"RedTeam has {redTeam.Points} points";
+            redsTeamPointsIndicator.Text = $"{redTeam.Points}";
         }
 
         public void UpdateCurrentPlayerIcon()
@@ -143,9 +147,21 @@ namespace Checkers
                 return false;
         }
 
-        private void newGameButton_Click(object sender, EventArgs e)
+        void SetTeamPointsIndicator()
+        {
+            greysTeamPointIndicator.Image = new Bitmap(new Bitmap(Path.Combine(Application.ExecutablePath, @"..\Assets\grey.png")), new Size(greysTeamPointIndicator.Size.Height - 15, greysTeamPointIndicator.Size.Width - 15));
+            redsTeamPointsIndicator.Image = new Bitmap(new Bitmap(Path.Combine(Application.ExecutablePath, @"..\Assets\red.png")), new Size(greysTeamPointIndicator.Size.Height - 15, greysTeamPointIndicator.Size.Width - 15));
+        }
+
+        private void menuStrip1_ItemClicked_1(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
+
+        private void newGameMenuItem_Click(object sender, EventArgs e)
         {
             NewGame();
+            SetTeamPointsIndicator();
         }
     }
 }

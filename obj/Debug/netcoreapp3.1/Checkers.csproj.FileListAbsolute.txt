@@ -13,3 +13,4 @@ C:\Users\megak\source\repos\Checkers\Checkers\bin\Debug\netcoreapp3.1\Checkers.p
 C:\Users\megak\source\repos\Checkers\Checkers\obj\Debug\netcoreapp3.1\Checkers.dll
 C:\Users\megak\source\repos\Checkers\Checkers\obj\Debug\netcoreapp3.1\Checkers.pdb
 C:\Users\megak\source\repos\Checkers\Checkers\obj\Debug\netcoreapp3.1\Checkers.genruntimeconfig.cache
+C:\Users\megak\source\repos\Checkers\Checkers\obj\Debug\netcoreapp3.1\Checkers.Properties.Resources.resources
