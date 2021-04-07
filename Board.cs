@@ -195,7 +195,7 @@ namespace Checkers
                         {
                             break;
                         }
-                        else if (!IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam))
+                        else if (!IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && boardButton.Row != row && boardButton.Column != column)
                         {
                             break;
                         }
@@ -220,7 +220,7 @@ namespace Checkers
                         {
                             break;
                         }
-                        else if (!IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam))
+                        else if (!IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && boardButton.Row != row && boardButton.Column != column)
                         {
                             break;
                         }
@@ -242,7 +242,7 @@ namespace Checkers
                         {
                             break;
                         }
-                        else if (!IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam))
+                        else if (!IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && boardButton.Row != row && boardButton.Column != column)
                         {
                             break;
                         }
@@ -264,7 +264,7 @@ namespace Checkers
                         {
                             break;
                         }
-                        else if (!IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam))
+                        else if (!IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && boardButton.Row != row && boardButton.Column != column)
                         {
                             break;
                         }
@@ -338,7 +338,7 @@ namespace Checkers
 
         private void MakeTheQueen(BoardButton currentButton, Team currentTeam)
         {
-            if(TeamIndicatorChecker(currentTeam)==1 && currentButton.Row == 7)
+            if(TeamIndicatorChecker(currentTeam) == 1 && currentButton.Row == 7)
                 currentButton.IsQueen = true;
             else if (TeamIndicatorChecker(currentTeam) == -1 && currentButton.Row == 0)
                 currentButton.IsQueen = true;

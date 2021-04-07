@@ -145,7 +145,6 @@ namespace Checkers
 
         private void newGameButton_Click(object sender, EventArgs e)
         {
-            board = null;
             NewGame();
         }
     }
