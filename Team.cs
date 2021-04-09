@@ -30,7 +30,7 @@ namespace Checkers
             Points += 1;
         }
 
-        public int GetStartingPosition()
+        public int GetTeamDirection()
         {
             if (this.StartingPosition == "Up") return 1;
             else if (this.StartingPosition == "Down") return -1;

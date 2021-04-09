@@ -104,7 +104,7 @@ namespace Checkers
 
         public void ResetPlayerPositions(BoardButton[,] checkerboard, Team team)
         {
-            int startingPosition = team.GetStartingPosition();
+            int startingPosition = team.GetTeamDirection();
 
             switch (startingPosition)
             {
@@ -177,102 +177,11 @@ namespace Checkers
                 }
             }
 
-            else if(boardButton.IsChosen && boardButton.IsQueen)
+            else if (boardButton.IsChosen && boardButton.IsQueen)
             {
-
-                for (int column = boardButton.Column, row = boardButton.Row; column >= 0 && row >= 0; column--, row--)
-                {
-                    try
-                    {
-                        if (IsFieldEmpty(checkerboard[column, row]))
-                        {
-                            EnableButton(checkerboard[column, row]);
-                            MarkButton(checkerboard[column, row]);
-                        }
-                        else if (!IsFieldEmpty(checkerboard[column, row]) && !IsFieldEmpty(checkerboard[column - 1, row - 1]))
-                            break;
-                        else if (!IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && !IsFieldEmpty(checkerboard[column - 1, row - 1]))
-                        {
-                            break;
-                        }
-                        else if (!IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && boardButton.Row != row && boardButton.Column != column)
-                        {
-                            break;
-                        }
-                    }
-                    catch { }
-                    
-                }
-                for (int column = boardButton.Column, row = boardButton.Row; column >= 0 && row < 8; column--, row++)
-                {
-                    try
-                    {
-                        if (IsFieldEmpty(checkerboard[column, row]))
-                        {
-                            EnableButton(checkerboard[column, row]);
-                            MarkButton(checkerboard[column, row]);
-                        }
-                        else if (!IsFieldEmpty(checkerboard[column, row]) && !IsFieldEmpty(checkerboard[column - 1, row + 1]))
-                        {
-                            break; 
-                        }
-                        else if (!IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && !IsFieldEmpty(checkerboard[column - 1, row + 1]))
-                        {
-                            break;
-                        }
-                        else if (!IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && boardButton.Row != row && boardButton.Column != column)
-                        {
-                            break;
-                        }
-                    }
-                    catch { }
-                    
-                }
-                for (int column = boardButton.Column, row = boardButton.Row; column < 8 && row < 8; column++, row++)
-                {
-                    try
-                    {
-                        if (IsFieldEmpty(checkerboard[column, row]))
-                        {
-                            EnableButton(checkerboard[column, row]);
-                            MarkButton(checkerboard[column, row]);
-                        }
-                        else if (!IsFieldEmpty(checkerboard[column, row]) && !IsFieldEmpty(checkerboard[column + 1, row + 1])) break;
-                        else if (!IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && !IsFieldEmpty(checkerboard[column + 1, row + 1]))
-                        {
-                            break;
-                        }
-                        else if (!IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && boardButton.Row != row && boardButton.Column != column)
-                        {
-                            break;
-                        }
-                    }
-                    catch { }
-                    
-                }
-                for(int column = boardButton.Column, row = boardButton.Row; column < 8 && row >= 0; column++, row--)
-                    {
-                    try
-                    {
-                        if (IsFieldEmpty(checkerboard[column, row]))
-                        {
-                            EnableButton(checkerboard[column, row]);
-                            MarkButton(checkerboard[column, row]);
-                        }
-                        else if (!IsFieldEmpty(checkerboard[column, row]) && !IsFieldEmpty(checkerboard[column + 1, row - 1])) break;
-                        else if (!IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && !IsFieldEmpty(checkerboard[column + 1, row - 1]))
-                        {
-                            break;
-                        }
-                        else if (!IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && boardButton.Row != row && boardButton.Column != column)
-                        {
-                            break;
-                        }
-                    }
-                    catch { }
-                }
+                ValidKingsMoves(boardButton, currentTeam);
+                MarkPossibleButtons();
             }
-
         }
 
 
@@ -408,91 +317,8 @@ namespace Checkers
 
             if (currentPosition.IsChosen && currentPosition.IsQueen)
             {
-                for (int column = currentPosition.Column, row = currentPosition.Row; column >= 0 && row >= 0; column--, row--)
-                {
-                    try
-                    {
-                        if (IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && IsFieldEmpty(checkerboard[column - 1, row - 1]))
-                        {
-                            EnableButton(checkerboard[column - 1, row - 1]);
-                            MarkButton(checkerboard[column - 1, row - 1]);
-                            markedPositionsList.Add(checkerboard[column - 1, row - 1]);
-                            markedFiguresToExecuteList.Add(checkerboard[column, row]);
-                            isSomeoneToExecute = true;
-
-                            break;
-                        }
-                        else if (IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && !IsFieldEmpty(checkerboard[column - 1, row - 1]))
-                        {
-                            break;
-                        }
-                    }
-                    catch { }
-
-                }
-                for (int column = currentPosition.Column, row = currentPosition.Row; column >= 0 && row < 8; column--, row++)
-                {
-                    try
-                    {
-                        if (IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && IsFieldEmpty(checkerboard[column - 1, row + 1]))
-                        {
-                            EnableButton(checkerboard[column - 1, row + 1]);
-                            MarkButton(checkerboard[column - 1, row + 1]);
-                            markedPositionsList.Add(checkerboard[column - 1, row + 1]);
-                            markedFiguresToExecuteList.Add(checkerboard[column, row]);
-                            isSomeoneToExecute = true;
-
-                            break;
-                        }
-                        else if (IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && !IsFieldEmpty(checkerboard[column - 1, row + 1]))
-                        {
-                            break;
-                        }
-                    }
-                    catch { }
-
-                }
-                for (int column = currentPosition.Column, row = currentPosition.Row; column < 8 && row < 8; column++, row++)
-                {
-                    try
-                    {
-                        if (IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && IsFieldEmpty(checkerboard[column + 1, row + 1]))
-                        {
-                            EnableButton(checkerboard[column + 1, row + 1]);
-                            MarkButton(checkerboard[column + 1, row + 1]);
-                            markedPositionsList.Add(checkerboard[column + 1, row + 1]);
-                            markedFiguresToExecuteList.Add(checkerboard[column, row]);
-                            isSomeoneToExecute = true;
-                            break;
-                        }
-                        else if (IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && !IsFieldEmpty(checkerboard[column + 1, row + 1]))
-                        {
-                            break;
-                        }
-                    }
-                    catch { }
-
-                }
-                for (int column = currentPosition.Column, row = currentPosition.Row; column < 8 && row >= 0; column++, row--)
-                {
-                    try
-                    {
-                        if (IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && IsFieldEmpty(checkerboard[column + 1, row - 1]))
-                        {
-                            EnableButton(checkerboard[column + 1, row - 1]);
-                            MarkButton(checkerboard[column + 1, row - 1]);
-                            markedPositionsList.Add(checkerboard[column + 1, row - 1]);
-                            markedFiguresToExecuteList.Add(checkerboard[column, row]);
-                            isSomeoneToExecute = true;
-                            break;
-                        }
-                        else if (IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && !IsFieldEmpty(checkerboard[column + 1, row - 1]))
-                        {
-                            break;
-                        }
-                    }
-                    catch { }
-                }
+                ValidMansMoves(currentPosition, currentTeam);
+                MarkPossibleButtons();
             }
 
             else if (currentPosition.IsChosen && !currentPosition.IsQueen)
@@ -523,5 +349,52 @@ namespace Checkers
 
             return isSomeoneToExecute;
         }
+
+        
+
+        public void ValidKingsMoves(BoardButton currentButton, Team currentTeam)
+        {
+            foreach(BoardButton button in checkerboard)
+            {
+                if((button.Row - button.Column) == (currentButton.Row - currentButton.Column) || (button.Row + button.Column) == (currentButton.Row + currentButton.Column))
+                {
+                    if (IsFieldEmpty(button)) markedPositionsList.Add(button);
+                    else if(IsFieldOccupiedByOpponent(button, currentTeam)) markedFiguresToExecuteList.Add(button);
+                }
+            }
+        }
+
+        public void ValidMansMoves(BoardButton currentButton, Team currentTeam)
+        {
+            int factor = currentTeam.GetTeamDirection();
+
+            foreach (BoardButton button in checkerboard)
+            {
+                if (((button.Row - button.Column) == (currentButton.Row - currentButton.Column) || (button.Row + button.Column) == (currentButton.Row + currentButton.Column)) && Math.Abs(button.Row - currentButton.Row) == 1) //&& (button.Row - currentButton.Row) == factor) //buton.Row - currentButton.Row <= factor - współczynnik w zależności czy damka czy zwykly ma wartość 7 lub 1; Wymyślić jak to rozegrać dla kierunku poruszania się
+                {
+                    if (IsFieldEmpty(button) && (button.Row - currentButton.Row) == factor) markedPositionsList.Add(button);
+                    else if (IsFieldOccupiedByOpponent(button, currentTeam))
+                    {
+                        int rowDirection = button.Row - currentButton.Row;
+                        int columnDirection = button.Column - currentButton.Column;
+                        rowDirection += button.Row;
+                        columnDirection += button.Column;
+                        
+                        if(IsFieldEmpty(checkerboard[columnDirection, rowDirection]))
+                            markedPositionsList.Add(checkerboard[columnDirection,rowDirection]);
+                    }
+                }
+            }
+        }
+
+        public void MarkPossibleButtons()
+        {
+            foreach(BoardButton button in markedPositionsList)
+            {
+                EnableButton(button);
+                MarkButton(button);
+            }
+        }
+
     }
 }

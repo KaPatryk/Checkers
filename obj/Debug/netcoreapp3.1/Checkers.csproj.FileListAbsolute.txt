@@ -14,3 +14,19 @@ C:\Users\megak\source\repos\Checkers\Checkers\obj\Debug\netcoreapp3.1\Checkers.d
 C:\Users\megak\source\repos\Checkers\Checkers\obj\Debug\netcoreapp3.1\Checkers.pdb
 C:\Users\megak\source\repos\Checkers\Checkers\obj\Debug\netcoreapp3.1\Checkers.genruntimeconfig.cache
 C:\Users\megak\source\repos\Checkers\Checkers\obj\Debug\netcoreapp3.1\Checkers.Properties.Resources.resources
+C:\Users\megak\source\repos\Checkers — kopia\Checkers\bin\Debug\netcoreapp3.1\Checkers.exe
+C:\Users\megak\source\repos\Checkers — kopia\Checkers\bin\Debug\netcoreapp3.1\Checkers.deps.json
+C:\Users\megak\source\repos\Checkers — kopia\Checkers\bin\Debug\netcoreapp3.1\Checkers.runtimeconfig.json
+C:\Users\megak\source\repos\Checkers — kopia\Checkers\bin\Debug\netcoreapp3.1\Checkers.runtimeconfig.dev.json
+C:\Users\megak\source\repos\Checkers — kopia\Checkers\bin\Debug\netcoreapp3.1\Checkers.dll
+C:\Users\megak\source\repos\Checkers — kopia\Checkers\bin\Debug\netcoreapp3.1\Checkers.pdb
+C:\Users\megak\source\repos\Checkers — kopia\Checkers\obj\Debug\netcoreapp3.1\Checkers.csprojAssemblyReference.cache
+C:\Users\megak\source\repos\Checkers — kopia\Checkers\obj\Debug\netcoreapp3.1\Checkers.Form1.resources
+C:\Users\megak\source\repos\Checkers — kopia\Checkers\obj\Debug\netcoreapp3.1\Checkers.Properties.Resources.resources
+C:\Users\megak\source\repos\Checkers — kopia\Checkers\obj\Debug\netcoreapp3.1\Checkers.csproj.GenerateResource.cache
+C:\Users\megak\source\repos\Checkers — kopia\Checkers\obj\Debug\netcoreapp3.1\Checkers.AssemblyInfoInputs.cache
+C:\Users\megak\source\repos\Checkers — kopia\Checkers\obj\Debug\netcoreapp3.1\Checkers.AssemblyInfo.cs
+C:\Users\megak\source\repos\Checkers — kopia\Checkers\obj\Debug\netcoreapp3.1\Checkers.csproj.CoreCompileInputs.cache
+C:\Users\megak\source\repos\Checkers — kopia\Checkers\obj\Debug\netcoreapp3.1\Checkers.dll
+C:\Users\megak\source\repos\Checkers — kopia\Checkers\obj\Debug\netcoreapp3.1\Checkers.pdb
+C:\Users\megak\source\repos\Checkers — kopia\Checkers\obj\Debug\netcoreapp3.1\Checkers.genruntimeconfig.cache

@@ -36,40 +36,29 @@ namespace Checkers
 
         public void MoveFigure(object sender, EventArgs e)
         {
+            board.UnmarkAllButtons();
+            board.ClearMarkingLists();
             BoardButton currentButton = (BoardButton)sender;
 
-            if (chosenButton.IsChosen && currentButton.IsEnabled && currentButton.Image == null)
+            if(currentButton.Image == currentTeam.figureImage && currentButton.IsEnabled)
+            {
+                ChooseTheButton(currentButton);
+                board.ValidMansMoves(currentButton, currentTeam);
+                board.MarkPossibleButtons();
+            }
+            else if (chosenButton.IsChosen && currentButton.IsEnabled)
             {
                 board.MakeMove(chosenButton, currentButton, currentTeam);
                 UpdatePoints();
-
-                if ((chosenButton.Row == (currentButton.Row - 1)) || (chosenButton.Row == (currentButton.Row + 1)))
-                {
-                    NextTurn();
-                }
-
-                else if (!board.PossibleFights(currentButton, currentTeam))
-                {
-                    NextTurn();
-                }
-                else
-                {
-                    chosenButton = currentButton;
-                }
-
+                NextTurn();
             }
-            else if (currentButton.Image == currentTeam.figureImage && currentButton.IsEnabled)
-            {
-                board.DisableAllButtons();
-                board.EnableAllTeamButtons(currentTeam);
-                board.ClearMarkingLists();
-                board.ResetIsChosenButtons();
-                chosenButton = currentButton;
-                board.UnmarkAllButtons();
-                board.PickUpButton(currentButton, currentTeam);
-                if (!board.PossibleFights(currentButton, currentTeam))
-                    board.ValidMoves(currentButton, currentTeam);
-            }
+            
+        }
+
+        public void ChooseTheButton(BoardButton chosenButton)
+        {
+            this.chosenButton = chosenButton;
+            this.chosenButton.IsChosen = true;
         }
 
         public void ChangeCurrentTeam()
