@@ -17,8 +17,10 @@ namespace Checkers
         public int ButtonSize { get; private set; }
 
         private BoardButton[,] checkerboard;
-        private List<BoardButton> markedPositionsList = new List<BoardButton>();
-        private List<BoardButton> markedFiguresToExecuteList = new List<BoardButton>();
+        private List<BoardButton> validPositionsList = new List<BoardButton>();
+        private List<BoardButton> figuresToExecuteList = new List<BoardButton>();
+        private List<BoardButton> validExecutionMovesList = new List<BoardButton>();
+        private List<BoardButton> validFiguresToMoveList = new List<BoardButton>();
 
 
         public Board(Form1 form, int boardSize, int buttonSize, Team firstTeam, Team secondTeam)
@@ -87,10 +89,8 @@ namespace Checkers
 
         private void PlaceButton(BoardButton boardButton, int column, int row)
         {
-
             boardButton.Location = new Point(boardButton.Size.Width * column, 35 + (boardButton.Size.Height * row));
             boardButton.SetPosition(column, row);
-
         }
 
         private void SetButtonBackColor(BoardButton boardButton, int column, int row)
@@ -99,7 +99,6 @@ namespace Checkers
             else if (row % 2 != 0 && column % 2 == 0) boardButton.BackColor = Color.Black;
             else if (row % 2 != 0 && column % 2 != 0) boardButton.BackColor = Color.White;
             else if (row % 2 == 0 && column % 2 != 0) boardButton.BackColor = Color.Black;
-
         }
 
         public void ResetPlayerPositions(BoardButton[,] checkerboard, Team team)
@@ -141,7 +140,6 @@ namespace Checkers
 
             if (boardButton.Image != null && boardButton.Image == currentTeam.figureImage)
                 boardButton.IsChosen = true;
-
         }
 
         public void ResetIsChosenButtons()
@@ -149,41 +147,6 @@ namespace Checkers
             foreach (BoardButton button in checkerboard)
                 button.IsChosen = false;
         }
-
-        public void ValidMoves(BoardButton boardButton, Team currentTeam)
-        {
-            int teamIndicator = TeamIndicatorChecker(currentTeam);
-
-            if (boardButton.IsChosen && !boardButton.IsQueen)
-            {
-                for (int row = (boardButton.Row - 1); row <= (boardButton.Row + 1); row++)
-                {
-                    for (int column = (boardButton.Column - 1); column <= (boardButton.Column + 1); column++)
-                    {
-                        if (boardButton.Column != column && boardButton.Row != row)
-                        {
-                            try
-                            {
-                                if (IsFieldEmpty(checkerboard[column, row]) && (boardButton.Row - row) == -teamIndicator)
-                                {
-                                    EnableButton(checkerboard[column, row]);
-                                    MarkButton(checkerboard[column, row]);
-                                }
-                            }
-                            catch { }
-
-                        }
-                    }
-                }
-            }
-
-            else if (boardButton.IsChosen && boardButton.IsQueen)
-            {
-                ValidKingsMoves(boardButton, currentTeam);
-                MarkPossibleButtons();
-            }
-        }
-
 
         public bool IsFieldEmpty(BoardButton boardButton)
         {
@@ -221,18 +184,22 @@ namespace Checkers
                 button.IsEnabled = false;
         }
 
+        public void DisableValidExecutionMovesButtons()
+        {
+            foreach (BoardButton button in validExecutionMovesList)
+                button.IsEnabled = false;
+        }
+
         public void MarkButton(BoardButton boardButton)
         {
             boardButton.FlatStyle = FlatStyle.Flat;
             boardButton.FlatAppearance.BorderSize = 5;
             boardButton.FlatAppearance.BorderColor = Color.Green;
-
         }
 
         public void UnmarkButton(BoardButton boardButton)
         {
             boardButton.FlatStyle = FlatStyle.Standard;
-
         }
 
         public void UnmarkAllButtons()
@@ -245,12 +212,12 @@ namespace Checkers
             EnableAllTeamButtons(currentTeam);
         }
 
-        private void MakeTheQueen(BoardButton currentButton, Team currentTeam)
+        private void MakeTheKing(BoardButton currentButton, Team currentTeam)
         {
-            if(TeamIndicatorChecker(currentTeam) == 1 && currentButton.Row == 7)
-                currentButton.IsQueen = true;
-            else if (TeamIndicatorChecker(currentTeam) == -1 && currentButton.Row == 0)
-                currentButton.IsQueen = true;
+            if(currentTeam.GetTeamDirection() == 1 && currentButton.Row == 7)
+                currentButton.IsKing = true;
+            else if (currentTeam.GetTeamDirection() == -1 && currentButton.Row == 0)
+                currentButton.IsKing = true;
         }
 
         public void MakeMove(BoardButton oldPosition, BoardButton newPosition, Team currentTeam)
@@ -258,8 +225,8 @@ namespace Checkers
             if (newPosition.IsEnabled)
             {
                 newPosition.Image = currentTeam.figureImage;
-                newPosition.IsQueen = oldPosition.IsQueen;
-                MakeTheQueen(newPosition, currentTeam);
+                newPosition.IsKing = oldPosition.IsKing;
+                MakeTheKing(newPosition, currentTeam);
                 oldPosition.Image = null;
                 UnmarkAllButtons();
                 DisableAllButtons();
@@ -275,11 +242,11 @@ namespace Checkers
 
         public bool Execution(BoardButton newPosition)
         {
-            for (int i = 0; i < markedPositionsList.Count; i++)
+            for (int i = 0; i < validExecutionMovesList.Count; i++)
             {
-                if (newPosition == markedPositionsList[i])
+                if (newPosition == validExecutionMovesList[i])
                 {
-                    ExecuteOpponentsFigure(markedFiguresToExecuteList[i]);
+                    ExecuteOpponentsFigure(figuresToExecuteList[i]);
                     return true;
                 }
             }
@@ -294,77 +261,64 @@ namespace Checkers
 
         public void ClearMarkingLists()
         {
-            markedPositionsList.Clear();
-            markedFiguresToExecuteList.Clear();
+            validPositionsList.Clear();
+            validExecutionMovesList.Clear();
+            figuresToExecuteList.Clear();
+            validFiguresToMoveList.Clear();
         }
 
-
-
-        public int TeamIndicatorChecker(Team currentTeam)
+        public void ClearValidExecutionMovesList()
         {
-            if (currentTeam.Name == "Red")
-                return 1;
-            else
-                return -1;
+            validExecutionMovesList.Clear();
         }
 
-        public bool PossibleFights(BoardButton currentPosition, Team currentTeam)
+        public void ClearValidPositionsList()
         {
-            int teamIndicator = TeamIndicatorChecker(currentTeam);
-            bool isSomeoneToExecute = false;
-
-            PickUpButton(currentPosition, currentTeam);
-
-            if (currentPosition.IsChosen && currentPosition.IsQueen)
-            {
-                ValidMansMoves(currentPosition, currentTeam);
-                MarkPossibleButtons();
-            }
-
-            else if (currentPosition.IsChosen && !currentPosition.IsQueen)
-            {
-                for (int row = (currentPosition.Row - 1); row <= (currentPosition.Row + 1); row++)
-                {
-                    for (int column = (currentPosition.Column - 1); column <= (currentPosition.Column + 1); column++)
-                    {
-                        if (currentPosition.Column != column && currentPosition.Row != row)
-                        {
-                            try
-                            {
-                                if (IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && IsFieldEmpty(checkerboard[column + (column - currentPosition.Column), row + (row - currentPosition.Row)]))
-                                {
-                                    EnableButton(checkerboard[column + (column - currentPosition.Column), row + (row - currentPosition.Row)]);
-                                    MarkButton(checkerboard[column + (column - currentPosition.Column), row + (row - currentPosition.Row)]);
-                                    markedPositionsList.Add(checkerboard[column + (column - currentPosition.Column), row + (row - currentPosition.Row)]);
-                                    markedFiguresToExecuteList.Add(checkerboard[column, row]);
-                                    isSomeoneToExecute = true;
-                                }
-                            }
-                            catch { }
-
-                        }
-                    }
-                }
-            }
-
-            return isSomeoneToExecute;
+            validPositionsList.Clear();
         }
 
-        
-
-        public void ValidKingsMoves(BoardButton currentButton, Team currentTeam)
+        public void Clear(List<BoardButton> listToClear)
         {
+            listToClear.Clear();
+        }
+
+        public bool FightChecker(Team currentTeam)
+        {
+            bool fightIndicator = false;
+
             foreach(BoardButton button in checkerboard)
             {
-                if((button.Row - button.Column) == (currentButton.Row - currentButton.Column) || (button.Row + button.Column) == (currentButton.Row + currentButton.Column))
+                if(button.IsEnabled)
                 {
-                    if (IsFieldEmpty(button)) markedPositionsList.Add(button);
-                    else if(IsFieldOccupiedByOpponent(button, currentTeam)) markedFiguresToExecuteList.Add(button);
+                    ValidMenMoves(button, currentTeam); 
                 }
             }
+
+            if (figuresToExecuteList.Count != 0)
+            {
+                fightIndicator = true;
+
+                DisableAllButtons();
+                EnableFiguresToMove();
+                validPositionsList.Clear();
+
+                foreach (BoardButton button in validExecutionMovesList)
+                {
+                    EnableButton(button);
+                    MarkButton(button);
+                }
+            }
+
+            return fightIndicator;
         }
 
-        public void ValidMansMoves(BoardButton currentButton, Team currentTeam)
+        public void EnableFiguresToMove()
+        {
+            foreach (BoardButton figureToEnable in validFiguresToMoveList)
+                EnableButton(figureToEnable);
+        }
+
+        public void ValidMenMoves(BoardButton currentButton, Team currentTeam)
         {
             int factor = currentTeam.GetTeamDirection();
 
@@ -372,28 +326,79 @@ namespace Checkers
             {
                 if (((button.Row - button.Column) == (currentButton.Row - currentButton.Column) || (button.Row + button.Column) == (currentButton.Row + currentButton.Column)) && Math.Abs(button.Row - currentButton.Row) == 1) //&& (button.Row - currentButton.Row) == factor) //buton.Row - currentButton.Row <= factor - współczynnik w zależności czy damka czy zwykly ma wartość 7 lub 1; Wymyślić jak to rozegrać dla kierunku poruszania się
                 {
-                    if (IsFieldEmpty(button) && (button.Row - currentButton.Row) == factor) markedPositionsList.Add(button);
+                    if (IsFieldEmpty(button) && (button.Row - currentButton.Row) == factor) validPositionsList.Add(button);
                     else if (IsFieldOccupiedByOpponent(button, currentTeam))
                     {
                         int rowDirection = button.Row - currentButton.Row;
                         int columnDirection = button.Column - currentButton.Column;
-                        rowDirection += button.Row;
-                        columnDirection += button.Column;
-                        
-                        if(IsFieldEmpty(checkerboard[columnDirection, rowDirection]))
-                            markedPositionsList.Add(checkerboard[columnDirection,rowDirection]);
+                        try
+                        {
+                            if (IsFieldEmpty(checkerboard[button.Column + columnDirection, button.Row + rowDirection]))
+                            {
+
+                                figuresToExecuteList.Add(checkerboard[button.Column, button.Row]);
+                                validExecutionMovesList.Add(checkerboard[button.Column + columnDirection, button.Row + rowDirection]);
+                                validFiguresToMoveList.Add(currentButton);
+                            }
+                        }
+                        catch { }
                     }
                 }
             }
         }
 
-        public void MarkPossibleButtons()
+        public void ValidKingsMoves(BoardButton currentButton, Team currentTeam) //Dopracować. Zmienić możliwe ruchy i dodać zbijanie.
         {
-            foreach(BoardButton button in markedPositionsList)
+            foreach (BoardButton button in checkerboard)
             {
-                EnableButton(button);
-                MarkButton(button);
+                if ((button.Row - button.Column) == (currentButton.Row - currentButton.Column) || (button.Row + button.Column) == (currentButton.Row + currentButton.Column))
+                {
+                    if (IsFieldEmpty(button)) validPositionsList.Add(button);
+                    else if (IsFieldOccupiedByOpponent(button, currentTeam))
+                    {
+                        int rowDirection = button.Row - currentButton.Row;
+                        int columnDirection = button.Column - currentButton.Column;
+                        try
+                        {
+                            if (IsFieldEmpty(checkerboard[button.Column + columnDirection, button.Row + rowDirection]))
+                            {
+                                figuresToExecuteList.Add(checkerboard[button.Column, button.Row]);
+                                validExecutionMovesList.Add(checkerboard[button.Column + columnDirection, button.Row + rowDirection]);
+                                validPositionsList.Add(checkerboard[button.Column + columnDirection, button.Row + rowDirection]);
+                            }
+                        }
+                        catch { }
+                    }
+                }
             }
+        }
+
+        public void MarkAllValidButtons()
+        {
+            if(validPositionsList.Count == 0)
+            {
+                foreach (BoardButton button in validExecutionMovesList)
+                {
+                    EnableButton(button);
+                    MarkButton(button);
+                }
+            }
+            else
+            {
+                foreach (BoardButton button in validPositionsList)
+                {
+                    EnableButton(button);
+                    MarkButton(button);
+                }
+            }
+        }
+
+        public bool IsSomeoneToExecute()
+        {
+            if (validExecutionMovesList.Count > 0)
+                return true;
+            else
+                return false;
         }
 
     }

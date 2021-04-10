@@ -17,18 +17,18 @@ namespace Checkers
         public int Column { get; private set; }
         public int Row { get; private set; }
         public bool IsEnabled { get; set; }
-        public bool IsQueen { get; set; }
+        public bool IsKing { get; set; }
 
         public BoardButton()
         {
-            IsQueen = false;
+            IsKing = false;
         }
         public BoardButton(int column, int row)
         {
             Column = column;
             Row = row;
             Position = new int[] { column, row };
-            IsQueen = false;
+            IsKing = false;
         }
 
         public void SetPosition(int column, int row)

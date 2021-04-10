@@ -36,23 +36,53 @@ namespace Checkers
 
         public void MoveFigure(object sender, EventArgs e)
         {
-            board.UnmarkAllButtons();
-            board.ClearMarkingLists();
             BoardButton currentButton = (BoardButton)sender;
 
-            if(currentButton.Image == currentTeam.figureImage && currentButton.IsEnabled)
+            if (currentButton.Image == currentTeam.figureImage && currentButton.IsEnabled && !board.IsSomeoneToExecute())
             {
+                board.ClearMarkingLists();
+                board.DisableAllButtons();
+                board.EnableAllTeamButtons(currentTeam);
+                board.UnmarkAllButtons();
+                board.ResetIsChosenButtons();
                 ChooseTheButton(currentButton);
-                board.ValidMansMoves(currentButton, currentTeam);
-                board.MarkPossibleButtons();
+
+                if (!currentButton.IsKing)
+                    board.ValidMenMoves(currentButton, currentTeam);
+                else
+                    board.ValidKingsMoves(currentButton, currentTeam);
+
+                board.MarkAllValidButtons();
             }
-            else if (chosenButton.IsChosen && currentButton.IsEnabled)
+            else if (chosenButton.IsChosen && currentButton.IsEnabled && currentButton.Image == null)
             {
                 board.MakeMove(chosenButton, currentButton, currentTeam);
                 UpdatePoints();
-                NextTurn();
+
+                board.ClearMarkingLists();
+                
+                if (!board.FightChecker(currentTeam))
+                {
+                    chosenButton.IsChosen = false;
+                    NextTurn();
+                }
+                else
+                {
+                    ChooseTheButton(currentButton);
+                }
             }
-            
+            else if (currentButton.Image == currentTeam.figureImage && currentButton.IsEnabled && board.IsSomeoneToExecute())
+            {
+                board.DisableValidExecutionMovesButtons();
+                board.ClearMarkingLists();
+                board.UnmarkAllButtons();
+                ChooseTheButton(currentButton);
+                board.ValidMenMoves(currentButton, currentTeam);
+                board.ClearValidPositionsList();
+                board.MarkAllValidButtons();
+            }
+            else if (!chosenButton.IsChosen) 
+                MessageBox.Show("Choose the valid figure");
         }
 
         public void ChooseTheButton(BoardButton chosenButton)
@@ -72,11 +102,14 @@ namespace Checkers
         {
             ChangeCurrentTeam();
 
+            chosenButton.IsChosen = false;
             board.DisableAllButtons();
             board.UnmarkAllButtons();
-            board.EnableAllTeamButtons(currentTeam);
             UpdateCurrentPlayerIcon();
             IsGameOver();
+            board.EnableAllTeamButtons(currentTeam);
+
+            board.FightChecker(currentTeam);
         }
 
         public void NewGame()
