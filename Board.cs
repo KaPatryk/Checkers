@@ -417,26 +417,20 @@ namespace Checkers
             int column = currentButton.Column+columnFactor;
             try
             {
-                while (IsFieldEmpty(checkerboard[column, row]))
+                if (IsFieldEmpty(checkerboard[column, row]) && (status == 0 || status == 1))
                 {
                     validPositionsList.Add(checkerboard[column, row]);
+                    Path(checkerboard[column, row], currentTeam, columnFactor, rowFactor, 0);
 
-                    if(status == 1)
-                    {
-                        validExecutionMovesList.Add(checkerboard[column, row]);
-                    }
-
-                    column += columnFactor;
-                    row += rowFactor;
                 }
-
-                if(IsFieldOccupiedByOpponent(checkerboard[column,row], currentTeam) && status == 0)
+                else if (IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && status == 0)
                 {
-
                     figuresToExecuteList.Add(checkerboard[column, row]);
-                    Path(checkerboard[column, row], currentTeam, columnFactor, rowFactor, 1);
+                    status++;
+                    Path(checkerboard[column, row], currentTeam, columnFactor, rowFactor, status);
                 }
-
+                else
+                    status++;
             }
             catch { }
 
