@@ -347,35 +347,9 @@ namespace Checkers
             }
         }
 
-        public void ValidKingsMoves(BoardButton currentButton, Team currentTeam) //Dopracować. Zmienić możliwe ruchy i dodać zbijanie.
-        {
-            foreach (BoardButton button in checkerboard)
-            {
-                if ((button.Row - button.Column) == (currentButton.Row - currentButton.Column) || (button.Row + button.Column) == (currentButton.Row + currentButton.Column))
-                {
-                    if (IsFieldEmpty(button)) validPositionsList.Add(button);
-                    else if (IsFieldOccupiedByOpponent(button, currentTeam))
-                    {
-                        int rowDirection = button.Row - currentButton.Row;
-                        int columnDirection = button.Column - currentButton.Column;
-                        try
-                        {
-                            if (IsFieldEmpty(checkerboard[button.Column + columnDirection, button.Row + rowDirection]))
-                            {
-                                figuresToExecuteList.Add(checkerboard[button.Column, button.Row]);
-                                validExecutionMovesList.Add(checkerboard[button.Column + columnDirection, button.Row + rowDirection]);
-                                validPositionsList.Add(checkerboard[button.Column + columnDirection, button.Row + rowDirection]);
-                            }
-                        }
-                        catch { }
-                    }
-                }
-            }
-        }
-
         public void MarkAllValidButtons()
         {
-            if(validPositionsList.Count == 0)
+            if (validPositionsList.Count == 0)
             {
                 foreach (BoardButton button in validExecutionMovesList)
                 {
@@ -400,6 +374,75 @@ namespace Checkers
             else
                 return false;
         }
+
+
+        //tutaj zaczyna się część eksperymentalna nad ruchem damki
+        public void ValidKingsMoves(BoardButton currentButton, Team currentTeam) //Dopracować. Zmienić możliwe ruchy i dodać zbijanie.
+        {
+            /*
+            foreach (BoardButton button in checkerboard)
+            {
+                if ((button.Row - button.Column) == (currentButton.Row - currentButton.Column) || (button.Row + button.Column) == (currentButton.Row + currentButton.Column))
+                {
+                    if (IsFieldEmpty(button)) validPositionsList.Add(button);
+                    else if (IsFieldOccupiedByOpponent(button, currentTeam))
+                    {
+                        int rowDirection = button.Row - currentButton.Row;
+                        rowDirection /= Math.Abs(rowDirection);
+                        int columnDirection = button.Column - currentButton.Column;
+                        columnDirection /= Math.Abs(columnDirection);
+                        try
+                        {
+                            if (IsFieldEmpty(checkerboard[button.Column + columnDirection, button.Row + rowDirection]) && IsFieldEmpty(checkerboard[button.Column - columnDirection, button.Row - rowDirection]))
+                            {
+                                figuresToExecuteList.Add(checkerboard[button.Column, button.Row]);
+                                validExecutionMovesList.Add(checkerboard[button.Column + columnDirection, button.Row + rowDirection]);
+                                validPositionsList.Add(checkerboard[button.Column + columnDirection, button.Row + rowDirection]);
+                            }
+                        }
+                        catch { }
+                    }
+                }
+            }
+            */
+            Path(currentButton, currentTeam, 1, -1, 0);
+            Path(currentButton, currentTeam, -1, 1, 0);
+            Path(currentButton, currentTeam, -1, -1, 0);
+            Path(currentButton, currentTeam, 1, 1, 0);
+        }
+
+        public void Path (BoardButton currentButton, Team currentTeam, int columnFactor, int rowFactor, int status)
+        {
+            int row = currentButton.Row+rowFactor;
+            int column = currentButton.Column+columnFactor;
+            try
+            {
+                while (IsFieldEmpty(checkerboard[column, row]))
+                {
+                    validPositionsList.Add(checkerboard[column, row]);
+
+                    if(status == 1)
+                    {
+                        validExecutionMovesList.Add(checkerboard[column, row]);
+                    }
+
+                    column += columnFactor;
+                    row += rowFactor;
+                }
+
+                if(IsFieldOccupiedByOpponent(checkerboard[column,row], currentTeam) && status == 0)
+                {
+
+                    figuresToExecuteList.Add(checkerboard[column, row]);
+                    Path(checkerboard[column, row], currentTeam, columnFactor, rowFactor, 1);
+                }
+
+            }
+            catch { }
+
+        }
+
+        
 
     }
 }
