@@ -12,19 +12,20 @@ namespace Checkers
 {
     public class Board
     {
-        private int Columns { get; set; }
-        private int Rows { get; set; }
+        public int Columns { get; private set; }
+        public int Rows { get; private set; }
         private int ButtonSize { get; set; }
 
-        private const int DEFAULT_COLUMN_COUNT = 8;
-        private const int DEFAULT_ROW_COUNT = 8;
+        private const int DEFAULT_COLUMN_COUNT = 10;
+        private const int DEFAULT_ROW_COUNT = 10;
         private const int DEFAULT_BUTTON_SIZE_COUNT = 50;
 
         public BoardButton[,] checkerboard { get; private set; }
 
-        private List<BoardButton> validPositionsList { get; set; } = new List<BoardButton>();
+        public List<BoardButton> validPositionsList { get; private set; } = new List<BoardButton>();
+        public List<BoardButton> validExecutionMovesList { get; private set; } = new List<BoardButton>();
+
         private List<BoardButton> figuresToExecuteList { get; set; } = new List<BoardButton>();
-        private List<BoardButton> validExecutionMovesList { get; set; } = new List<BoardButton>();
         private List<BoardButton> validFiguresToMoveList { get; set; } = new List<BoardButton>();
 
         public Board(Form1 form, int boardSize, int buttonSize, Team firstTeam, Team secondTeam)
@@ -71,7 +72,7 @@ namespace Checkers
                     checkerboard[column, row] = CreateNewButton(buttonSize);
                     PlaceButton(checkerboard[column, row], column, row);
                     SetButtonBackColor(checkerboard[column, row], column, row);
-
+                    
                     form.Controls.Add(checkerboard[column, row]);
                     AddButtonClickTo_EventHandler(checkerboard[column, row], form);
                 }
@@ -93,7 +94,7 @@ namespace Checkers
 
         private void PlaceButton(BoardButton boardButton, int column, int row)
         {
-            boardButton.Location = new Point(boardButton.Size.Width * column, 35 + (boardButton.Size.Height * row));
+            boardButton.Location = new Point(10 + (boardButton.Size.Width * column), 32 + (boardButton.Size.Height * row));
             boardButton.SetPosition(column, row);
         }
 
@@ -247,7 +248,7 @@ namespace Checkers
 
         private void MakeTheKing(BoardButton currentButton, Team currentTeam)
         {
-            if(currentTeam.GetTeamDirection() == 1 && currentButton.Row == 7)
+            if(currentTeam.GetTeamDirection() == 1 && currentButton.Row == Rows-1)
             {
                 currentButton.IsKing = true;
                 TryToSetKingButtonParameters(currentButton);

@@ -30,8 +30,9 @@ namespace Checkers
 
         public Form1()
         {
-            InitializeComponent();
             
+            InitializeComponent();
+
             NewGame();
             SetTeamPointsIndicator();
         }
@@ -48,7 +49,7 @@ namespace Checkers
                 board.UnmarkAllButtons();
                 board.ResetIsChosenButtons();
                 ChooseTheButton(currentButton);
-
+                
                 if (!currentButton.IsKing)
                     board.ValidMenMoves(currentButton, currentTeam);
                 else
@@ -102,8 +103,14 @@ namespace Checkers
         private void ChangeCurrentTeam()
         {
             teamIndicator *= -1;
-            if (teamIndicator == 1) currentTeam = redTeam;
-            else currentTeam = greyTeam;
+            if (teamIndicator == 1)
+            {
+                currentTeam = redTeam;
+            }
+            else 
+            { 
+                currentTeam = greyTeam;
+            }
         }
 
         private void NextTurn()
@@ -113,11 +120,13 @@ namespace Checkers
             chosenButton.IsChosen = false;
             board.DisableAllButtons();
             board.UnmarkAllButtons();
-            UpdateCurrentPlayerIcon();
-            IsGameOver();
+            UpdateCurrentPlayerLabel();
+            
             board.EnableAllTeamButtons(currentTeam);
-
             board.FightChecker(currentTeam);
+
+            IsGameOver();
+            label1.Text = $"{board.validExecutionMovesList.Count}, {board.validPositionsList.Count}";
         }
 
         private void NewGame()
@@ -137,7 +146,7 @@ namespace Checkers
             board.DisableAllButtons();
             board.UnmarkAllButtons();
             board.EnableAllTeamButtons(currentTeam);
-            UpdateCurrentPlayerIcon();
+            UpdateCurrentPlayerLabel();
         }
 
         private void ResetTeamIndicator()
@@ -151,29 +160,46 @@ namespace Checkers
             redsTeamPointsIndicator.Text = $"{redTeam.Points}";
         }
 
-        private void UpdateCurrentPlayerIcon()
+        private void UpdateCurrentPlayerLabel()
         {
-            turnIndicatorLabel.Text = $"{currentTeam.Name}Team's turn";
-            turnIndicatorPictureBox.Image = currentTeam.figureImage;
+            if (teamIndicator == 1)
+            {
+                currentTeam = redTeam;
+                redTurnIndicatorLabel.Visible = true;
+                greyTurnIndicatorLabel.Visible = false;
+            }
+            else
+            {
+                currentTeam = greyTeam;
+                redTurnIndicatorLabel.Visible = false;
+                greyTurnIndicatorLabel.Visible = true;
+            }
         }
 
         private bool IsGameOver()
         {
-            int teamFiguresQty = 0;
-            foreach (BoardButton button in board.GetCheckerboard())
+            int maxPoints = (board.Columns / 2) * 3;
+            if(greyTeam.Points == maxPoints)
             {
-                if (button.Image == currentTeam.figureImage)
-                {
-                    teamFiguresQty++;
-                }
+                MessageBox.Show($"Grey Team wins!" +
+                    $"Congratulation!");
+                return true;
             }
-            if (teamFiguresQty == 0)
+            else if (redTeam.Points == maxPoints)
             {
-                MessageBox.Show($"{currentTeam.Name}Team is the looser!");
+                MessageBox.Show($"Grey Team wins!" +
+                    $"\nCONGRATULATIONS!");
+                return true;
+            }
+            else if(board.validExecutionMovesList.Count == 0 && board.validPositionsList.Count == 0)
+            {
+                MessageBox.Show($"{currentTeam.Name} draws");
                 return true;
             }
             else
+            {
                 return false;
+            }
         }
 
         private void SetTeamPointsIndicator()

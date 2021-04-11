@@ -30,7 +30,7 @@ namespace Checkers
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.turnIndicatorLabel = new System.Windows.Forms.Label();
+            this.redTurnIndicatorLabel = new System.Windows.Forms.Label();
             this.greysTeamPointIndicator = new System.Windows.Forms.Button();
             this.redsTeamPointsIndicator = new System.Windows.Forms.Button();
             this.newGameMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -65,49 +65,54 @@ namespace Checkers
             this.boardSizeMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.internationalSizeMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.smallSizeMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.turnIndicatorPictureBox = new System.Windows.Forms.PictureBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.greyTurnIndicatorLabel = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.turnIndicatorPictureBox)).BeginInit();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
-            // turnIndicatorLabel
+            // redTurnIndicatorLabel
             // 
-            this.turnIndicatorLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.turnIndicatorLabel.AutoSize = true;
-            this.turnIndicatorLabel.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.turnIndicatorLabel.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.turnIndicatorLabel.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.turnIndicatorLabel.Location = new System.Drawing.Point(486, 229);
-            this.turnIndicatorLabel.Name = "turnIndicatorLabel";
-            this.turnIndicatorLabel.Size = new System.Drawing.Size(167, 25);
-            this.turnIndicatorLabel.TabIndex = 3;
-            this.turnIndicatorLabel.Text = "turnIndicatorLabel";
+            this.redTurnIndicatorLabel.AllowDrop = true;
+            this.redTurnIndicatorLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.redTurnIndicatorLabel.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.redTurnIndicatorLabel.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.redTurnIndicatorLabel.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.redTurnIndicatorLabel.ForeColor = System.Drawing.Color.Red;
+            this.redTurnIndicatorLabel.Location = new System.Drawing.Point(106, 26);
+            this.redTurnIndicatorLabel.Name = "redTurnIndicatorLabel";
+            this.redTurnIndicatorLabel.Size = new System.Drawing.Size(70, 52);
+            this.redTurnIndicatorLabel.TabIndex = 3;
+            this.redTurnIndicatorLabel.Text = "Your turn";
+            this.redTurnIndicatorLabel.Visible = false;
             // 
             // greysTeamPointIndicator
             // 
             this.greysTeamPointIndicator.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             this.greysTeamPointIndicator.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.greysTeamPointIndicator.FlatAppearance.BorderSize = 0;
-            this.greysTeamPointIndicator.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.greysTeamPointIndicator.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.greysTeamPointIndicator.Font = new System.Drawing.Font("Segoe UI", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.greysTeamPointIndicator.Image = global::Checkers.Properties.Resources.grey;
-            this.greysTeamPointIndicator.Location = new System.Drawing.Point(420, 335);
+            this.greysTeamPointIndicator.Location = new System.Drawing.Point(0, 410);
             this.greysTeamPointIndicator.Name = "greysTeamPointIndicator";
             this.greysTeamPointIndicator.Size = new System.Drawing.Size(100, 100);
             this.greysTeamPointIndicator.TabIndex = 5;
+            this.greysTeamPointIndicator.TabStop = false;
             this.greysTeamPointIndicator.Text = "0";
             this.greysTeamPointIndicator.UseCompatibleTextRendering = true;
-            this.greysTeamPointIndicator.UseVisualStyleBackColor = true;
+            this.greysTeamPointIndicator.UseVisualStyleBackColor = false;
             // 
             // redsTeamPointsIndicator
             // 
             this.redsTeamPointsIndicator.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             this.redsTeamPointsIndicator.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.redsTeamPointsIndicator.FlatAppearance.BorderSize = 0;
-            this.redsTeamPointsIndicator.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.redsTeamPointsIndicator.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.redsTeamPointsIndicator.Font = new System.Drawing.Font("Segoe UI", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.redsTeamPointsIndicator.Image = global::Checkers.Properties.Resources.grey;
-            this.redsTeamPointsIndicator.Location = new System.Drawing.Point(420, 35);
+            this.redsTeamPointsIndicator.Location = new System.Drawing.Point(0, 0);
             this.redsTeamPointsIndicator.Name = "redsTeamPointsIndicator";
             this.redsTeamPointsIndicator.Size = new System.Drawing.Size(100, 100);
             this.redsTeamPointsIndicator.TabIndex = 6;
@@ -296,7 +301,7 @@ namespace Checkers
             this.gameMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(684, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(709, 24);
             this.menuStrip1.TabIndex = 7;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -339,40 +344,63 @@ namespace Checkers
             this.smallSizeMenuItem1.Size = new System.Drawing.Size(110, 22);
             this.smallSizeMenuItem1.Text = "8 x 8";
             // 
-            // turnIndicatorPictureBox
+            // panel1
             // 
-            this.turnIndicatorPictureBox.Image = global::Checkers.Properties.Resources.grey;
-            this.turnIndicatorPictureBox.Location = new System.Drawing.Point(420, 211);
-            this.turnIndicatorPictureBox.Name = "turnIndicatorPictureBox";
-            this.turnIndicatorPictureBox.Size = new System.Drawing.Size(60, 60);
-            this.turnIndicatorPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.turnIndicatorPictureBox.TabIndex = 8;
-            this.turnIndicatorPictureBox.TabStop = false;
+            this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel1.Location = new System.Drawing.Point(5, 27);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(510, 510);
+            this.panel1.TabIndex = 0;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.greyTurnIndicatorLabel);
+            this.panel2.Controls.Add(this.redsTeamPointsIndicator);
+            this.panel2.Controls.Add(this.redTurnIndicatorLabel);
+            this.panel2.Controls.Add(this.greysTeamPointIndicator);
+            this.panel2.Location = new System.Drawing.Point(521, 27);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(184, 510);
+            this.panel2.TabIndex = 9;
+            // 
+            // greyTurnIndicatorLabel
+            // 
+            this.greyTurnIndicatorLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.greyTurnIndicatorLabel.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.greyTurnIndicatorLabel.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.greyTurnIndicatorLabel.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.greyTurnIndicatorLabel.ForeColor = System.Drawing.Color.Red;
+            this.greyTurnIndicatorLabel.Location = new System.Drawing.Point(106, 439);
+            this.greyTurnIndicatorLabel.Name = "greyTurnIndicatorLabel";
+            this.greyTurnIndicatorLabel.Size = new System.Drawing.Size(70, 51);
+            this.greyTurnIndicatorLabel.TabIndex = 9;
+            this.greyTurnIndicatorLabel.Text = "Your turn";
+            this.greyTurnIndicatorLabel.Visible = false;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(684, 461);
-            this.Controls.Add(this.turnIndicatorPictureBox);
-            this.Controls.Add(this.redsTeamPointsIndicator);
-            this.Controls.Add(this.greysTeamPointIndicator);
-            this.Controls.Add(this.turnIndicatorLabel);
+            this.ClientSize = new System.Drawing.Size(709, 546);
+            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
-            this.MaximumSize = new System.Drawing.Size(700, 500);
-            this.MinimumSize = new System.Drawing.Size(700, 500);
+            this.MaximumSize = new System.Drawing.Size(725, 585);
+            this.MinimumSize = new System.Drawing.Size(725, 585);
             this.Name = "Form1";
             this.Text = "Checkers";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.turnIndicatorPictureBox)).EndInit();
+            this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.Label turnIndicatorLabel;
+        private System.Windows.Forms.Label redTurnIndicatorLabel;
         private System.Windows.Forms.Button greysTeamPointIndicator;
         private System.Windows.Forms.Button redsTeamPointsIndicator;
         private System.Windows.Forms.ToolStripMenuItem newGameMenuItem;
@@ -404,10 +432,12 @@ namespace Checkers
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem gameMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newGameMenuItem1;
-        private System.Windows.Forms.PictureBox turnIndicatorPictureBox;
         private System.Windows.Forms.ToolStripMenuItem boardSizeMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem internationalSizeMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem smallSizeMenuItem1;
+        public System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label greyTurnIndicatorLabel;
     }
 }
 
