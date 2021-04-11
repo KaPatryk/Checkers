@@ -13,21 +13,20 @@ namespace Checkers
     public class BoardButton : Button
     {
         public bool IsChosen { get; set; }
-        public int[] Position { get; set; }
-        public int Column { get; private set; }
-        public int Row { get; private set; }
         public bool IsEnabled { get; set; }
         public bool IsKing { get; set; }
+        public int Column { get; private set; }
+        public int Row { get; private set; }
+        public int[] Position { get; set; }
 
         public BoardButton()
         {
             IsKing = false;
         }
+
         public BoardButton(int column, int row)
         {
-            Column = column;
-            Row = row;
-            Position = new int[] { column, row };
+            SetPosition(column, row);
             IsKing = false;
         }
 
@@ -38,6 +37,4 @@ namespace Checkers
             Position = new int[] { column, row };
         }
     }
-
-    
 }

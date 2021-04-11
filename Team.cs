@@ -13,8 +13,8 @@ namespace Checkers
     public class Team
     {
         public string Name { get; private set; }
-        public Image figureImage { get; set; }
-        public string StartingPosition { get; set; }
+        public string StartingPosition { get; private set; }
+        public Image figureImage { get; private set; }
         public int Points { get; private set; }
 
         public Team(string name, Image figureImage, string startingPosition)

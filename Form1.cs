@@ -15,16 +15,18 @@ namespace Checkers
     public partial class Form1 : Form
     {
         Board board;
+        BoardButton chosenButton = new BoardButton();
+
         Team redTeam;
         Team greyTeam;
         Team currentTeam;
-        int teamIndicator = -1;
 
-        static int buttonSize = 50;
+        int teamIndicator = -1;
+        const int DEFAULT_BUTTON_SIZE_COUNT = 50;
+        static int buttonSize = DEFAULT_BUTTON_SIZE_COUNT;
+
         static Image redFigure = new Bitmap(new Bitmap(Path.Combine(Application.ExecutablePath, @"..\Assets\red.png")), new Size(buttonSize - 15, buttonSize - 15));
         static Image greyFigure = new Bitmap(new Bitmap(Path.Combine(Application.ExecutablePath, @"..\Assets\grey.png")), new Size(buttonSize - 15, buttonSize - 15));
-
-        BoardButton chosenButton = new BoardButton();
 
         public Form1()
         {
@@ -73,11 +75,17 @@ namespace Checkers
             }
             else if (currentButton.Image == currentTeam.figureImage && currentButton.IsEnabled && board.IsSomeoneToExecute())
             {
-                board.DisableValidExecutionMovesButtons();
                 board.ClearMarkingLists();
-                board.UnmarkAllButtons();
+                board.DisableValidExecutionMovesButtons();
+                
+                board.UnmarkAllGreenButtons();
                 ChooseTheButton(currentButton);
-                board.ValidMenMoves(currentButton, currentTeam);
+
+                if (!currentButton.IsKing)
+                    board.ValidMenMoves(currentButton, currentTeam);
+                else
+                    board.ValidKingsMoves(currentButton, currentTeam);
+
                 board.ClearValidPositionsList();
                 board.MarkAllValidButtons();
             }
@@ -85,20 +93,20 @@ namespace Checkers
                 MessageBox.Show("Choose the valid figure");
         }
 
-        public void ChooseTheButton(BoardButton chosenButton)
+        private void ChooseTheButton(BoardButton chosenButton)
         {
             this.chosenButton = chosenButton;
             this.chosenButton.IsChosen = true;
         }
 
-        public void ChangeCurrentTeam()
+        private void ChangeCurrentTeam()
         {
             teamIndicator *= -1;
             if (teamIndicator == 1) currentTeam = redTeam;
             else currentTeam = greyTeam;
         }
 
-        public void NextTurn()
+        private void NextTurn()
         {
             ChangeCurrentTeam();
 
@@ -112,7 +120,7 @@ namespace Checkers
             board.FightChecker(currentTeam);
         }
 
-        public void NewGame()
+        private void NewGame()
         {
             this.Controls.Clear();
             
@@ -137,20 +145,19 @@ namespace Checkers
             teamIndicator = -1;
         }
 
-        public void UpdatePoints()
+        private void UpdatePoints()
         {
-            greyPointsLabel.Text = $"GreyTeam has {greyTeam.Points} points";
             greysTeamPointIndicator.Text = $"{greyTeam.Points}";
-            redPointsLabel.Text = $"RedTeam has {redTeam.Points} points";
             redsTeamPointsIndicator.Text = $"{redTeam.Points}";
         }
 
-        public void UpdateCurrentPlayerIcon()
+        private void UpdateCurrentPlayerIcon()
         {
             turnIndicatorLabel.Text = $"{currentTeam.Name}Team's turn";
+            turnIndicatorPictureBox.Image = currentTeam.figureImage;
         }
 
-        public bool IsGameOver()
+        private bool IsGameOver()
         {
             int teamFiguresQty = 0;
             foreach (BoardButton button in board.GetCheckerboard())
@@ -169,15 +176,10 @@ namespace Checkers
                 return false;
         }
 
-        void SetTeamPointsIndicator()
+        private void SetTeamPointsIndicator()
         {
             greysTeamPointIndicator.Image = new Bitmap(new Bitmap(Path.Combine(Application.ExecutablePath, @"..\Assets\grey.png")), new Size(greysTeamPointIndicator.Size.Height - 15, greysTeamPointIndicator.Size.Width - 15));
             redsTeamPointsIndicator.Image = new Bitmap(new Bitmap(Path.Combine(Application.ExecutablePath, @"..\Assets\red.png")), new Size(greysTeamPointIndicator.Size.Height - 15, greysTeamPointIndicator.Size.Width - 15));
-        }
-
-        private void menuStrip1_ItemClicked_1(object sender, ToolStripItemClickedEventArgs e)
-        {
-
         }
 
         private void newGameMenuItem_Click(object sender, EventArgs e)

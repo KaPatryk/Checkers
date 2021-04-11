@@ -30,9 +30,6 @@ namespace Checkers
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.label1 = new System.Windows.Forms.Label();
-            this.greyPointsLabel = new System.Windows.Forms.Label();
-            this.redPointsLabel = new System.Windows.Forms.Label();
             this.turnIndicatorLabel = new System.Windows.Forms.Label();
             this.greysTeamPointIndicator = new System.Windows.Forms.Button();
             this.redsTeamPointsIndicator = new System.Windows.Forms.Button();
@@ -65,44 +62,13 @@ namespace Checkers
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.gameMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newGameMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.boardSizeMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.internationalSizeMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.smallSizeMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.turnIndicatorPictureBox = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.turnIndicatorPictureBox)).BeginInit();
             this.SuspendLayout();
-            // 
-            // label1
-            // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label1.Location = new System.Drawing.Point(457, 216);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(86, 25);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "POINTS:";
-            this.label1.Visible = false;
-            // 
-            // greyPointsLabel
-            // 
-            this.greyPointsLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.greyPointsLabel.AutoSize = true;
-            this.greyPointsLabel.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.greyPointsLabel.Location = new System.Drawing.Point(523, 197);
-            this.greyPointsLabel.Name = "greyPointsLabel";
-            this.greyPointsLabel.Size = new System.Drawing.Size(60, 19);
-            this.greyPointsLabel.TabIndex = 1;
-            this.greyPointsLabel.Text = "POINTS";
-            this.greyPointsLabel.Visible = false;
-            // 
-            // redPointsLabel
-            // 
-            this.redPointsLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.redPointsLabel.AutoSize = true;
-            this.redPointsLabel.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.redPointsLabel.Location = new System.Drawing.Point(457, 197);
-            this.redPointsLabel.Name = "redPointsLabel";
-            this.redPointsLabel.Size = new System.Drawing.Size(60, 19);
-            this.redPointsLabel.TabIndex = 2;
-            this.redPointsLabel.Text = "POINTS";
-            this.redPointsLabel.Visible = false;
             // 
             // turnIndicatorLabel
             // 
@@ -111,7 +77,7 @@ namespace Checkers
             this.turnIndicatorLabel.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.turnIndicatorLabel.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.turnIndicatorLabel.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.turnIndicatorLabel.Location = new System.Drawing.Point(420, 228);
+            this.turnIndicatorLabel.Location = new System.Drawing.Point(486, 229);
             this.turnIndicatorLabel.Name = "turnIndicatorLabel";
             this.turnIndicatorLabel.Size = new System.Drawing.Size(167, 25);
             this.turnIndicatorLabel.TabIndex = 3;
@@ -333,12 +299,12 @@ namespace Checkers
             this.menuStrip1.Size = new System.Drawing.Size(684, 24);
             this.menuStrip1.TabIndex = 7;
             this.menuStrip1.Text = "menuStrip1";
-            this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked_1);
             // 
             // gameMenuItem
             // 
             this.gameMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.newGameMenuItem1});
+            this.newGameMenuItem1,
+            this.boardSizeMenuItem1});
             this.gameMenuItem.Name = "gameMenuItem";
             this.gameMenuItem.Size = new System.Drawing.Size(50, 20);
             this.gameMenuItem.Text = "Game";
@@ -350,17 +316,48 @@ namespace Checkers
             this.newGameMenuItem1.Text = "New game";
             this.newGameMenuItem1.Click += new System.EventHandler(this.newGameMenuItem_Click);
             // 
+            // boardSizeMenuItem1
+            // 
+            this.boardSizeMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.internationalSizeMenuItem1,
+            this.smallSizeMenuItem1});
+            this.boardSizeMenuItem1.Enabled = false;
+            this.boardSizeMenuItem1.Name = "boardSizeMenuItem1";
+            this.boardSizeMenuItem1.Size = new System.Drawing.Size(131, 22);
+            this.boardSizeMenuItem1.Text = "Board size";
+            this.boardSizeMenuItem1.Visible = false;
+            // 
+            // internationalSizeMenuItem1
+            // 
+            this.internationalSizeMenuItem1.Name = "internationalSizeMenuItem1";
+            this.internationalSizeMenuItem1.Size = new System.Drawing.Size(110, 22);
+            this.internationalSizeMenuItem1.Text = "10 x 10";
+            // 
+            // smallSizeMenuItem1
+            // 
+            this.smallSizeMenuItem1.Name = "smallSizeMenuItem1";
+            this.smallSizeMenuItem1.Size = new System.Drawing.Size(110, 22);
+            this.smallSizeMenuItem1.Text = "8 x 8";
+            // 
+            // turnIndicatorPictureBox
+            // 
+            this.turnIndicatorPictureBox.Image = global::Checkers.Properties.Resources.grey;
+            this.turnIndicatorPictureBox.Location = new System.Drawing.Point(420, 211);
+            this.turnIndicatorPictureBox.Name = "turnIndicatorPictureBox";
+            this.turnIndicatorPictureBox.Size = new System.Drawing.Size(60, 60);
+            this.turnIndicatorPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.turnIndicatorPictureBox.TabIndex = 8;
+            this.turnIndicatorPictureBox.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(684, 461);
+            this.Controls.Add(this.turnIndicatorPictureBox);
             this.Controls.Add(this.redsTeamPointsIndicator);
             this.Controls.Add(this.greysTeamPointIndicator);
             this.Controls.Add(this.turnIndicatorLabel);
-            this.Controls.Add(this.redPointsLabel);
-            this.Controls.Add(this.greyPointsLabel);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.menuStrip1);
             this.MaximumSize = new System.Drawing.Size(700, 500);
             this.MinimumSize = new System.Drawing.Size(700, 500);
@@ -368,16 +365,13 @@ namespace Checkers
             this.Text = "Checkers";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.turnIndicatorPictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label greyPointsLabel;
-        private System.Windows.Forms.Label redPointsLabel;
         private System.Windows.Forms.Label turnIndicatorLabel;
         private System.Windows.Forms.Button greysTeamPointIndicator;
         private System.Windows.Forms.Button redsTeamPointsIndicator;
@@ -410,6 +404,10 @@ namespace Checkers
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem gameMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newGameMenuItem1;
+        private System.Windows.Forms.PictureBox turnIndicatorPictureBox;
+        private System.Windows.Forms.ToolStripMenuItem boardSizeMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem internationalSizeMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem smallSizeMenuItem1;
     }
 }
 
