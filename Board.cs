@@ -52,11 +52,6 @@ namespace Checkers
             ResetPlayerPositions(checkerboard, secondTeam);
         }
 
-        public BoardButton[,] GetCheckerboard()
-        {
-            return checkerboard;
-        }
-
         enum StartingPosition
         {
             Up = 1,
@@ -72,7 +67,7 @@ namespace Checkers
                     checkerboard[column, row] = CreateNewButton(buttonSize);
                     PlaceButton(checkerboard[column, row], column, row);
                     SetButtonBackColor(checkerboard[column, row], column, row);
-                    
+
                     form.Controls.Add(checkerboard[column, row]);
                     AddButtonClickTo_EventHandler(checkerboard[column, row], form);
                 }
@@ -88,6 +83,7 @@ namespace Checkers
         {
             BoardButton boardButton = new BoardButton();
             boardButton.Size = new Size(buttonSize, buttonSize);
+            boardButton.FlatStyle = FlatStyle.Flat;
 
             return boardButton;
         }
@@ -114,7 +110,7 @@ namespace Checkers
             }
             else if (IsEven(row) && !IsEven(column)) 
             { 
-                boardButton.BackColor = Color.Black; 
+                boardButton.BackColor = Color.Black;
             }
         }
 
@@ -226,22 +222,20 @@ namespace Checkers
             boardButton.FlatAppearance.BorderColor = color;
         }
 
-        public void UnmarkButton(BoardButton boardButton)
-        {
-            boardButton.FlatStyle = FlatStyle.Standard;
-        }
-
         public void UnmarkAllButtons()
         {
-            foreach (BoardButton button in checkerboard) button.FlatStyle = FlatStyle.Standard;
+            foreach (BoardButton button in checkerboard)
+            {
+                button.FlatStyle = FlatStyle.Standard;
+            }
         }
         public void UnmarkAllGreenButtons()
         {
             foreach (BoardButton button in checkerboard)
             {
                 if (button.FlatAppearance.BorderColor == Color.Green) 
-                { 
-                    button.FlatStyle = FlatStyle.Standard; 
+                {
+                    button.FlatStyle = FlatStyle.Standard;
                 }
             }
         }

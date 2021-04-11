@@ -92,6 +92,8 @@ namespace Checkers
             this.greysTeamPointIndicator.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             this.greysTeamPointIndicator.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.greysTeamPointIndicator.FlatAppearance.BorderSize = 0;
+            this.greysTeamPointIndicator.FlatAppearance.MouseDownBackColor = System.Drawing.SystemColors.Control;
+            this.greysTeamPointIndicator.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.Control;
             this.greysTeamPointIndicator.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.greysTeamPointIndicator.Font = new System.Drawing.Font("Segoe UI", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.greysTeamPointIndicator.Image = global::Checkers.Properties.Resources.grey;
@@ -108,7 +110,10 @@ namespace Checkers
             // 
             this.redsTeamPointsIndicator.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             this.redsTeamPointsIndicator.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.redsTeamPointsIndicator.BackColor = System.Drawing.SystemColors.Control;
             this.redsTeamPointsIndicator.FlatAppearance.BorderSize = 0;
+            this.redsTeamPointsIndicator.FlatAppearance.MouseDownBackColor = System.Drawing.SystemColors.Control;
+            this.redsTeamPointsIndicator.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.Control;
             this.redsTeamPointsIndicator.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.redsTeamPointsIndicator.Font = new System.Drawing.Font("Segoe UI", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.redsTeamPointsIndicator.Image = global::Checkers.Properties.Resources.grey;
@@ -118,7 +123,7 @@ namespace Checkers
             this.redsTeamPointsIndicator.TabIndex = 6;
             this.redsTeamPointsIndicator.Text = "0";
             this.redsTeamPointsIndicator.UseCompatibleTextRendering = true;
-            this.redsTeamPointsIndicator.UseVisualStyleBackColor = true;
+            this.redsTeamPointsIndicator.UseVisualStyleBackColor = false;
             // 
             // newGameMenuItem
             // 
@@ -297,6 +302,7 @@ namespace Checkers
             // 
             // menuStrip1
             // 
+            this.menuStrip1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.gameMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);

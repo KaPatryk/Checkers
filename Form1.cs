@@ -30,7 +30,6 @@ namespace Checkers
 
         public Form1()
         {
-            
             InitializeComponent();
 
             NewGame();
@@ -126,7 +125,6 @@ namespace Checkers
             board.FightChecker(currentTeam);
 
             IsGameOver();
-            label1.Text = $"{board.validExecutionMovesList.Count}, {board.validPositionsList.Count}";
         }
 
         private void NewGame()
