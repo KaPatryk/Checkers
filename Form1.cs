@@ -186,12 +186,12 @@ namespace Checkers
             if(greyTeam.Points == maxPoints)
             {
                 MessageBox.Show($"Grey Team wins!" +
-                    $"Congratulation!");
+                    $"\nCongratulation!");
                 return true;
             }
             else if (redTeam.Points == maxPoints)
             {
-                MessageBox.Show($"Grey Team wins!" +
+                MessageBox.Show($"Red Team wins!" +
                     $"\nCONGRATULATIONS!");
                 return true;
             }
