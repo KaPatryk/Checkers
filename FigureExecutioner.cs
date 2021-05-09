@@ -33,7 +33,10 @@ namespace Checkers
                 int directionExecutionRowFactor = button.Row - oldPosition.Row;
                 directionExecutionRowFactor /= Math.Abs(directionExecutionRowFactor);
 
-                if (directionExecutionColumnFactor == directionColumnFactor && directionExecutionRowFactor == directionRowFactor)
+                int rowsBetween = Math.Abs(button.Row - oldPosition.Row);
+                int columnsBetween = Math.Abs(button.Column - oldPosition.Column);
+
+                if (directionExecutionColumnFactor == directionColumnFactor && directionExecutionRowFactor == directionRowFactor && columnsBetween == rowsBetween)
                 {
                     ExecuteOpponentsFigure(button);
                     return true;

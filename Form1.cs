@@ -16,8 +16,6 @@ namespace Checkers
         private Board board;
         private BoardButton chosenButton = new BoardButton();
 
-        
-
         private Team redTeam;
         private Team greyTeam;
         private Team currentTeam;
@@ -33,9 +31,7 @@ namespace Checkers
         public Form1()
         {
             InitializeComponent();
-
             NewGame();
-
             SetTeamPointsIndicator();
         }
 
@@ -48,8 +44,8 @@ namespace Checkers
                 board.ClearMarkingLists();
                 board.DisableAllButtons();
                 board.EnableAllTeamButtons(currentTeam);
-                BoardPainter.UnmarkAllButtons(board.Checkerboard);
                 board.ResetIsChosenButtons();
+                BoardPainter.UnmarkAllButtons(board.Checkerboard);
                 ChooseTheButton(currentButton);
                 
                 if (!currentButton.IsKing)
@@ -88,15 +84,21 @@ namespace Checkers
                 ChooseTheButton(currentButton);
 
                 if (!currentButton.IsKing)
+                {
                     board.ValidMenMoves(currentButton, currentTeam);
+                }
                 else
+                {
                     board.ValidKingsMoves(currentButton, currentTeam);
+                }
 
                 board.ClearValidPositionsList();
                 board.EnableAllValidButtons();
             }
-            else if (!chosenButton.IsChosen) 
+            else if (!chosenButton.IsChosen)
+            {
                 MessageBox.Show("Choose the valid figure");
+            }
         }
 
         private void ChooseTheButton(BoardButton chosenButton)
@@ -108,6 +110,7 @@ namespace Checkers
         private void ChangeCurrentTeam()
         {
             teamIndicator *= -1;
+
             if (teamIndicator == 1)
             {
                 currentTeam = redTeam;
@@ -123,6 +126,7 @@ namespace Checkers
             ChangeCurrentTeam();
 
             chosenButton.IsChosen = false;
+
             board.DisableAllButtons();
             BoardPainter.UnmarkAllButtons(board.Checkerboard);
             UpdateCurrentPlayerLabel();
@@ -140,11 +144,9 @@ namespace Checkers
             redTeam = new Team("Red", redFigure, "Up");
             greyTeam = new Team("Grey", greyFigure, "Down");
             board = new Board(this, greyTeam, redTeam);
-
             currentTeam = greyTeam;
 
             InitializeComponent();
-
             ResetTeamIndicator();
             UpdatePoints();
             board.DisableAllButtons();

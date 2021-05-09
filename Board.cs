@@ -122,11 +122,14 @@ namespace Checkers
         {
             for (int column = 0; column < Columns; column++)
             {
-                if (row % 2 == 0 && column % 2 != 0) 
-                { 
+                if (row % 2 == 0 && column % 2 != 0)
+                {
                     Checkerboard[column, row].Image = team.figureImage;
                 }
-                else if (row % 2 != 0 && column % 2 == 0) Checkerboard[column, row].Image = team.figureImage;
+                else if (row % 2 != 0 && column % 2 == 0)
+                {
+                    Checkerboard[column, row].Image = team.figureImage;
+                }
             }
         }
 
@@ -228,11 +231,15 @@ namespace Checkers
             {
                 newPosition.Image = oldPosition.Image;
                 newPosition.IsKing = oldPosition.IsKing;
+
                 MakeTheKing(newPosition, currentTeam);
                 TryToSetKingButtonParameters(oldPosition, newPosition);
+
                 oldPosition.Image = null;
+
                 BoardPainter.UnmarkAllButtons(Checkerboard);
                 DisableAllButtons();
+
                 if (FigureExecutioner.Execution(oldPosition, newPosition))
                 {
                     currentTeam.AddPoint();

@@ -17,19 +17,11 @@ namespace Checkers
 
         public static void SetButtonBackColor(BoardButton boardButton, int column, int row)
         {
-            if (NumberCheck.IsEven(row) && NumberCheck.IsEven(column))
+            if ((NumberCheck.IsEven(row) && NumberCheck.IsEven(column)) || (!NumberCheck.IsEven(row) && !NumberCheck.IsEven(column)))
             {
                 boardButton.BackColor = Color.White;
             }
-            else if (!NumberCheck.IsEven(row) && NumberCheck.IsEven(column))
-            {
-                boardButton.BackColor = Color.Black;
-            }
-            else if (!NumberCheck.IsEven(row) && !NumberCheck.IsEven(column))
-            {
-                boardButton.BackColor = Color.White;
-            }
-            else if (NumberCheck.IsEven(row) && !NumberCheck.IsEven(column))
+            else
             {
                 boardButton.BackColor = Color.Black;
             }
