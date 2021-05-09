@@ -11,28 +11,31 @@ using System.IO;
 
 namespace Checkers
 {
-    
     public partial class Form1 : Form
     {
-        Board board;
-        BoardButton chosenButton = new BoardButton();
+        private Board board;
+        private BoardButton chosenButton = new BoardButton();
 
-        Team redTeam;
-        Team greyTeam;
-        Team currentTeam;
+        
 
-        int teamIndicator = -1;
-        const int DEFAULT_BUTTON_SIZE_COUNT = 50;
-        static int buttonSize = DEFAULT_BUTTON_SIZE_COUNT;
+        private Team redTeam;
+        private Team greyTeam;
+        private Team currentTeam;
 
-        static Image redFigure = new Bitmap(new Bitmap(Path.Combine(Application.ExecutablePath, @"..\Assets\red.png")), new Size(buttonSize - 15, buttonSize - 15));
-        static Image greyFigure = new Bitmap(new Bitmap(Path.Combine(Application.ExecutablePath, @"..\Assets\grey.png")), new Size(buttonSize - 15, buttonSize - 15));
+        private int teamIndicator = -1;
+        private const int DEFAULT_BUTTON_SIZE_COUNT = 50;
+        private const int DEFAULT_BUTTON_IMAGE_MARGIN = 15;
+        private static int buttonSize = DEFAULT_BUTTON_SIZE_COUNT;
+
+        private static Image redFigure = new Bitmap(new Bitmap(Path.Combine(Application.ExecutablePath, @"..\Assets\red.png")), new Size(buttonSize - DEFAULT_BUTTON_IMAGE_MARGIN, buttonSize - DEFAULT_BUTTON_IMAGE_MARGIN));
+        private static Image greyFigure = new Bitmap(new Bitmap(Path.Combine(Application.ExecutablePath, @"..\Assets\grey.png")), new Size(buttonSize - DEFAULT_BUTTON_IMAGE_MARGIN, buttonSize - DEFAULT_BUTTON_IMAGE_MARGIN));
 
         public Form1()
         {
             InitializeComponent();
 
             NewGame();
+
             SetTeamPointsIndicator();
         }
 
@@ -45,7 +48,7 @@ namespace Checkers
                 board.ClearMarkingLists();
                 board.DisableAllButtons();
                 board.EnableAllTeamButtons(currentTeam);
-                board.UnmarkAllButtons();
+                BoardPainter.UnmarkAllButtons(board.Checkerboard);
                 board.ResetIsChosenButtons();
                 ChooseTheButton(currentButton);
                 
@@ -54,12 +57,15 @@ namespace Checkers
                 else
                     board.ValidKingsMoves(currentButton, currentTeam);
 
-                board.MarkAllValidButtons();
+                board.EnableAllValidButtons();
             }
             else if (chosenButton.IsChosen && currentButton.IsEnabled && currentButton.Image == null)
             {
-                board.MakeMove(chosenButton, currentButton, currentTeam);
-                UpdatePoints();
+                if(chosenButton.Column != currentButton.Column)
+                {
+                    board.MakeMove(chosenButton, currentButton, currentTeam);
+                    UpdatePoints();
+                }
 
                 board.ClearMarkingLists();
                 
@@ -78,7 +84,7 @@ namespace Checkers
                 board.ClearMarkingLists();
                 board.DisableValidExecutionMovesButtons();
                 
-                board.UnmarkAllGreenButtons();
+                BoardPainter.UnmarkAllGreenButtons(board.Checkerboard);
                 ChooseTheButton(currentButton);
 
                 if (!currentButton.IsKing)
@@ -87,7 +93,7 @@ namespace Checkers
                     board.ValidKingsMoves(currentButton, currentTeam);
 
                 board.ClearValidPositionsList();
-                board.MarkAllValidButtons();
+                board.EnableAllValidButtons();
             }
             else if (!chosenButton.IsChosen) 
                 MessageBox.Show("Choose the valid figure");
@@ -118,7 +124,7 @@ namespace Checkers
 
             chosenButton.IsChosen = false;
             board.DisableAllButtons();
-            board.UnmarkAllButtons();
+            BoardPainter.UnmarkAllButtons(board.Checkerboard);
             UpdateCurrentPlayerLabel();
             
             board.EnableAllTeamButtons(currentTeam);
@@ -142,7 +148,7 @@ namespace Checkers
             ResetTeamIndicator();
             UpdatePoints();
             board.DisableAllButtons();
-            board.UnmarkAllButtons();
+            BoardPainter.UnmarkAllButtons(board.Checkerboard);
             board.EnableAllTeamButtons(currentTeam);
             UpdateCurrentPlayerLabel();
         }

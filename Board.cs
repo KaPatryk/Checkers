@@ -20,12 +20,10 @@ namespace Checkers
         private const int DEFAULT_ROW_COUNT = 10;
         private const int DEFAULT_BUTTON_SIZE_COUNT = 50;
 
-        public BoardButton[,] checkerboard { get; private set; }
+        public BoardButton[,] Checkerboard { get; private set; }
 
         public List<BoardButton> validPositionsList { get; private set; } = new List<BoardButton>();
         public List<BoardButton> validExecutionMovesList { get; private set; } = new List<BoardButton>();
-
-        private List<BoardButton> figuresToExecuteList { get; set; } = new List<BoardButton>();
         private List<BoardButton> validFiguresToMoveList { get; set; } = new List<BoardButton>();
 
         public Board(Form1 form, int boardSize, int buttonSize, Team firstTeam, Team secondTeam)
@@ -33,11 +31,11 @@ namespace Checkers
             ButtonSize = buttonSize;
             Columns = boardSize;
             Rows = boardSize;
-            checkerboard = new BoardButton[Columns, Rows];
+            Checkerboard = new BoardButton[Columns, Rows];
 
             BuildBoard(Columns, Rows, ButtonSize, form);
-            ResetPlayerPositions(checkerboard, firstTeam);
-            ResetPlayerPositions(checkerboard, secondTeam);
+            ResetPlayerPositions(Checkerboard, firstTeam);
+            ResetPlayerPositions(Checkerboard, secondTeam);
         }
 
         public Board(Form1 form, Team firstTeam, Team secondTeam)
@@ -45,11 +43,11 @@ namespace Checkers
             ButtonSize = DEFAULT_BUTTON_SIZE_COUNT;
             Columns = DEFAULT_COLUMN_COUNT;
             Rows = DEFAULT_ROW_COUNT;
-            checkerboard = new BoardButton[Columns, Rows];
+            Checkerboard = new BoardButton[Columns, Rows];
 
             BuildBoard(Columns, Rows, ButtonSize, form);
-            ResetPlayerPositions(checkerboard, firstTeam);
-            ResetPlayerPositions(checkerboard, secondTeam);
+            ResetPlayerPositions(Checkerboard, firstTeam);
+            ResetPlayerPositions(Checkerboard, secondTeam);
         }
 
         enum StartingPosition
@@ -57,19 +55,19 @@ namespace Checkers
             Up = 1,
             Down = -1
         }
-
+        
         public void BuildBoard(int columns, int rows, int buttonSize, Form1 form)
         {
             for (int row = 0; row < rows; row++)
             {
                 for (int column = 0; column < columns; column++)
                 {
-                    checkerboard[column, row] = CreateNewButton(buttonSize);
-                    PlaceButton(checkerboard[column, row], column, row);
-                    SetButtonBackColor(checkerboard[column, row], column, row);
+                    Checkerboard[column, row] = CreateNewButton(buttonSize);
+                    PlaceButton(Checkerboard[column, row], column, row);
+                    BoardPainter.SetButtonBackColor(Checkerboard[column, row], column, row);
 
-                    form.Controls.Add(checkerboard[column, row]);
-                    AddButtonClickTo_EventHandler(checkerboard[column, row], form);
+                    form.Controls.Add(Checkerboard[column, row]);
+                    AddButtonClickTo_EventHandler(Checkerboard[column, row], form);
                 }
             }
         }
@@ -84,6 +82,8 @@ namespace Checkers
             BoardButton boardButton = new BoardButton();
             boardButton.Size = new Size(buttonSize, buttonSize);
             boardButton.FlatStyle = FlatStyle.Flat;
+            boardButton.ImageAlign = ContentAlignment.MiddleCenter;
+            boardButton.Padding = new Padding(0, 0, 2, 2);
 
             return boardButton;
         }
@@ -92,31 +92,6 @@ namespace Checkers
         {
             boardButton.Location = new Point(10 + (boardButton.Size.Width * column), 32 + (boardButton.Size.Height * row));
             boardButton.SetPosition(column, row);
-        }
-
-        private void SetButtonBackColor(BoardButton boardButton, int column, int row)
-        {
-            if (IsEven(row) && IsEven(column))
-            {
-                boardButton.BackColor = Color.White;
-            }
-            else if (!IsEven(row) && IsEven(column))
-            {
-                boardButton.BackColor = Color.Black;
-            }
-            else if (!IsEven(row) && !IsEven(column))
-            {
-                boardButton.BackColor = Color.White;
-            }
-            else if (IsEven(row) && !IsEven(column)) 
-            { 
-                boardButton.BackColor = Color.Black;
-            }
-        }
-
-        private bool IsEven(int number)
-        {
-            return number % 2 == 0;
         }
 
         public void ResetPlayerPositions(BoardButton[,] checkerboard, Team team)
@@ -147,8 +122,11 @@ namespace Checkers
         {
             for (int column = 0; column < Columns; column++)
             {
-                if (row % 2 == 0 && column % 2 != 0) checkerboard[column, row].Image = team.figureImage;
-                else if (row % 2 != 0 && column % 2 == 0) checkerboard[column, row].Image = team.figureImage;
+                if (row % 2 == 0 && column % 2 != 0) 
+                { 
+                    Checkerboard[column, row].Image = team.figureImage;
+                }
+                else if (row % 2 != 0 && column % 2 == 0) Checkerboard[column, row].Image = team.figureImage;
             }
         }
 
@@ -162,28 +140,28 @@ namespace Checkers
 
         public void ResetIsChosenButtons()
         {
-            foreach (BoardButton button in checkerboard)
+            foreach (BoardButton button in Checkerboard)
                 button.IsChosen = false;
         }
-
+        
         public bool IsFieldEmpty(BoardButton boardButton)
         {
             return boardButton.Image == null && boardButton.BackColor != Color.White;
         }
-
+        
         public bool IsFieldOccupiedByOpponent(BoardButton boardButton, Team currentTeam)
         {
             return IsFieldEmpty(boardButton) == false && boardButton.Image != currentTeam.figureImage;
         }
-
-        public void EnableButton(BoardButton boardButton)
+        
+        public static void EnableButton(BoardButton boardButton)
         {
             boardButton.IsEnabled = true;
         }
 
         public void EnableAllTeamButtons(Team currentTeam)
         {
-            foreach (BoardButton button in checkerboard)
+            foreach (BoardButton button in Checkerboard)
             {
                 if (button.Image == currentTeam.figureImage)
                 {
@@ -194,7 +172,7 @@ namespace Checkers
 
         public void DisableAllButtons()
         {
-            foreach (BoardButton button in checkerboard)
+            foreach (BoardButton button in Checkerboard)
             {
                 button.IsEnabled = false;
             }
@@ -205,38 +183,6 @@ namespace Checkers
             foreach (BoardButton button in validExecutionMovesList)
             {
                 button.IsEnabled = false;
-            }
-        }
-
-        public void MarkButton(BoardButton boardButton)
-        {
-            boardButton.FlatStyle = FlatStyle.Flat;
-            boardButton.FlatAppearance.BorderSize = 5;
-            boardButton.FlatAppearance.BorderColor = Color.Green;
-        }
-
-        public void MarkButton(BoardButton boardButton, Color color)
-        {
-            boardButton.FlatStyle = FlatStyle.Flat;
-            boardButton.FlatAppearance.BorderSize = 5;
-            boardButton.FlatAppearance.BorderColor = color;
-        }
-
-        public void UnmarkAllButtons()
-        {
-            foreach (BoardButton button in checkerboard)
-            {
-                button.FlatStyle = FlatStyle.Standard;
-            }
-        }
-        public void UnmarkAllGreenButtons()
-        {
-            foreach (BoardButton button in checkerboard)
-            {
-                if (button.FlatAppearance.BorderColor == Color.Green) 
-                {
-                    button.FlatStyle = FlatStyle.Standard;
-                }
             }
         }
 
@@ -275,7 +221,7 @@ namespace Checkers
                 newPosition.TextAlign = ContentAlignment.MiddleCenter;
             }
         }
-
+        
         public void MakeMove(BoardButton oldPosition, BoardButton newPosition, Team currentTeam)
         {
             if (newPosition.IsEnabled)
@@ -285,9 +231,9 @@ namespace Checkers
                 MakeTheKing(newPosition, currentTeam);
                 TryToSetKingButtonParameters(oldPosition, newPosition);
                 oldPosition.Image = null;
-                UnmarkAllButtons();
+                BoardPainter.UnmarkAllButtons(Checkerboard);
                 DisableAllButtons();
-                if (Execution(oldPosition, newPosition))
+                if (FigureExecutioner.Execution(oldPosition, newPosition))
                 {
                     currentTeam.AddPoint();
                     newPosition.IsEnabled = true;
@@ -296,43 +242,11 @@ namespace Checkers
                 ClearMarkingLists();
             }
         }
-
-        public bool Execution(BoardButton oldPosition, BoardButton newPosition)
-        {
-            int directionColumnFactor = newPosition.Column - oldPosition.Column;
-            directionColumnFactor /= Math.Abs(directionColumnFactor);
-
-            int directionRowFactor = newPosition.Row - oldPosition.Row;
-            directionRowFactor /= Math.Abs(directionRowFactor);
-
-            foreach(BoardButton button in figuresToExecuteList)
-            {
-                int directionExecutionColumnFactor = button.Column - oldPosition.Column;
-                directionExecutionColumnFactor /= Math.Abs(directionExecutionColumnFactor);
-
-                int directionExecutionRowFactor = button.Row - oldPosition.Row;
-                directionExecutionRowFactor /= Math.Abs(directionExecutionRowFactor);
-
-                if (directionExecutionColumnFactor == directionColumnFactor && directionExecutionRowFactor == directionRowFactor)
-                {
-                    ExecuteOpponentsFigure(button);
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public void ExecuteOpponentsFigure(BoardButton figureToExecute)
-        {
-            figureToExecute.Image = null;
-            ClearMarkingLists();
-        }
-
+       
         public void ClearMarkingLists()
         {
             validPositionsList.Clear();
             validExecutionMovesList.Clear();
-            figuresToExecuteList.Clear();
             validFiguresToMoveList.Clear();
         }
 
@@ -350,12 +264,12 @@ namespace Checkers
         {
             listToClear.Clear();
         }
-
+        
         public bool FightChecker(Team currentTeam)
         {
             bool fightIndicator = false;
 
-            foreach(BoardButton button in checkerboard)
+            foreach(BoardButton button in Checkerboard)
             {
                 if(button.IsEnabled)
                 {
@@ -366,7 +280,7 @@ namespace Checkers
                 }
             }
 
-            if (figuresToExecuteList.Count != 0)
+            if (FigureExecutioner.IsFigureToExecute())
             {
                 fightIndicator = true;
 
@@ -374,27 +288,27 @@ namespace Checkers
                 EnableFiguresToMove();
                 validPositionsList.Clear();
 
-                foreach (BoardButton button in figuresToExecuteList)
+                foreach (BoardButton button in FigureExecutioner.figuresToExecuteList)
                 {
                     EnableButton(button);
-                    MarkButton(button, Color.Red);
+                    BoardPainter.MarkButton(button, Color.Red);
                 }
             }
 
             return fightIndicator;
         }
-
+        
         public void EnableFiguresToMove()
         {
             foreach (BoardButton figureToEnable in validFiguresToMoveList)
                 EnableButton(figureToEnable);
         }
-
+        
         public void ValidMenMoves(BoardButton currentButton, Team currentTeam)
         {
             int factor = currentTeam.GetTeamDirection();
 
-            foreach (BoardButton button in checkerboard)
+            foreach (BoardButton button in Checkerboard)
             {
                 if (((button.Row - button.Column) == (currentButton.Row - currentButton.Column) || (button.Row + button.Column) == (currentButton.Row + currentButton.Column)) && Math.Abs(button.Row - currentButton.Row) == 1) //&& (button.Row - currentButton.Row) == factor) //buton.Row - currentButton.Row <= factor - współczynnik w zależności czy damka czy zwykly ma wartość 7 lub 1; Wymyślić jak to rozegrać dla kierunku poruszania się
                 {
@@ -405,11 +319,11 @@ namespace Checkers
                         int columnDirection = button.Column - currentButton.Column;
                         try
                         {
-                            if (IsFieldEmpty(checkerboard[button.Column + columnDirection, button.Row + rowDirection]))
+                            if (IsFieldEmpty(Checkerboard[button.Column + columnDirection, button.Row + rowDirection]))
                             {
 
-                                figuresToExecuteList.Add(checkerboard[button.Column, button.Row]);
-                                validExecutionMovesList.Add(checkerboard[button.Column + columnDirection, button.Row + rowDirection]);
+                                FigureExecutioner.AddFigureToExecutionList(Checkerboard[button.Column, button.Row]);
+                                validExecutionMovesList.Add(Checkerboard[button.Column + columnDirection, button.Row + rowDirection]);
                                 validFiguresToMoveList.Add(currentButton);
                             }
                         }
@@ -418,15 +332,15 @@ namespace Checkers
                 }
             }
         }
-
-        public void MarkAllValidButtons()
+        
+        public void EnableAllValidButtons()
         {
             if (validPositionsList.Count == 0)
             {
                 foreach (BoardButton button in validExecutionMovesList)
                 {
                     EnableButton(button);
-                    MarkButton(button);
+                    BoardPainter.MarkButton(button);
                 }
             }
             else
@@ -434,11 +348,11 @@ namespace Checkers
                 foreach (BoardButton button in validPositionsList)
                 {
                     EnableButton(button);
-                    MarkButton(button);
+                    BoardPainter.MarkButton(button);
                 }
             }
         }
-
+        
         public bool IsSomeoneToExecute()
         {
             return validExecutionMovesList.Count > 0;
@@ -446,7 +360,6 @@ namespace Checkers
 
         public void ValidKingsMoves(BoardButton currentButton, Team currentTeam)
         {
-
             validFiguresToMoveList.Add(currentButton);
 
             Path(currentButton, currentTeam, 1, -1, 0);
@@ -465,28 +378,29 @@ namespace Checkers
         {
             int row = currentButton.Row+rowFactor;
             int column = currentButton.Column+columnFactor;
+
             try
             {
-                if (IsFieldEmpty(checkerboard[column, row]))
+                if (IsFieldEmpty(Checkerboard[column, row]))
                 {
                     if (status == 0)
                     {
-                        validPositionsList.Add(checkerboard[column, row]);
+                        validPositionsList.Add(Checkerboard[column, row]);
                     }
                     else if (status == 1)
                     {
-                        validExecutionMovesList.Add(checkerboard[column, row]);
+                        validExecutionMovesList.Add(Checkerboard[column, row]);
                     }
                     
-                    Path(checkerboard[column, row], currentTeam, columnFactor, rowFactor, status);
+                    Path(Checkerboard[column, row], currentTeam, columnFactor, rowFactor, status);
                 }
-                else if (IsFieldOccupiedByOpponent(checkerboard[column, row], currentTeam) && status == 0 && IsFieldEmpty(checkerboard[column + columnFactor, row + rowFactor]))
+                else if (IsFieldOccupiedByOpponent(Checkerboard[column, row], currentTeam) && status == 0 && IsFieldEmpty(Checkerboard[column + columnFactor, row + rowFactor]))
                 {
-                    figuresToExecuteList.Add(checkerboard[column, row]);
+                    FigureExecutioner.AddFigureToExecutionList(Checkerboard[column, row]);
                     validPositionsList.Clear();
 
                     status++;
-                    Path(checkerboard[column, row], currentTeam, columnFactor, rowFactor, status);
+                    Path(Checkerboard[column, row], currentTeam, columnFactor, rowFactor, status);
                 }
             }
             catch { }
