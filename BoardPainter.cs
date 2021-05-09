@@ -12,7 +12,8 @@ namespace Checkers
 {
     static class BoardPainter
     {
-        private const int DEFAULT_BUTTON_BORDER = 3;
+        private const int DEFAULT_MARKED_BUTTON_BORDER = 3;
+        private const int DEFAULT_BUTTON_BORDER = 1;
 
         public static void SetButtonBackColor(BoardButton boardButton, int column, int row)
         {
@@ -37,14 +38,14 @@ namespace Checkers
         public static void MarkButton(BoardButton boardButton)
         {
             boardButton.FlatStyle = FlatStyle.Flat;
-            boardButton.FlatAppearance.BorderSize = DEFAULT_BUTTON_BORDER;
+            boardButton.FlatAppearance.BorderSize = DEFAULT_MARKED_BUTTON_BORDER;
             boardButton.FlatAppearance.BorderColor = Color.Green;
         }
 
         public static void MarkButton(BoardButton boardButton, Color color)
         {
             boardButton.FlatStyle = FlatStyle.Flat;
-            boardButton.FlatAppearance.BorderSize = DEFAULT_BUTTON_BORDER;
+            boardButton.FlatAppearance.BorderSize = DEFAULT_MARKED_BUTTON_BORDER;
             boardButton.FlatAppearance.BorderColor = color;
         }
 
@@ -53,7 +54,7 @@ namespace Checkers
             foreach (BoardButton button in checkerboard)
             {
                 button.FlatAppearance.BorderColor = Color.Black;
-                button.FlatAppearance.BorderSize = 1;
+                button.FlatAppearance.BorderSize = DEFAULT_BUTTON_BORDER;
             }
         }
 
@@ -64,7 +65,7 @@ namespace Checkers
                 if (button.FlatAppearance.BorderColor == Color.Green)
                 {
                     button.FlatAppearance.BorderColor = Color.Black;
-                    button.FlatAppearance.BorderSize = 1;
+                    button.FlatAppearance.BorderSize = DEFAULT_BUTTON_BORDER;
                 }
             }
         }
